@@ -1,70 +1,74 @@
 # PokerTrainer
 
-PokerTrainer is a Duolingo-inspired poker training web app built with **Next.js**, **React**, **Supabase**, and **TailwindCSS**.
+PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offline.
 
 ## Features
 
-- Authentication (signup/login)
-- User XP, level, and streak tracking
-- Lessons organized by level
-- Multiple-choice questions with single-answer selection
-- Gamified XP progression (level up every 100 XP)
-- Completed lesson tracking + optional review mode
-- Modern UI with progress bar, XP counter, and level indicator
+- Create or reuse a local username profile.
+- Track XP, level, streak, and completed lessons.
+- Play 3 lessons with instant answer feedback.
+- Earn **+10 XP** for each correct answer.
+- Unlock lessons based on your level.
+- Persist all user progress in `server/db.json`.
 
 ## Tech Stack
 
-- Next.js (App Router)
-- React
-- Supabase (Postgres)
-- TailwindCSS
+- Frontend: HTML, CSS, JavaScript (ES6), React via CDN, TailwindCSS via CDN
+- Backend: Node.js + Express
+- Database: JSON file (`server/db.json`) using filesystem persistence
 
-## Getting Started
+## Project Structure
 
-1. Install dependencies:
+```
+/pokertrainer
+  /server
+    server.js
+    db.json
+  /client
+    index.html
+    app.js
+    styles.css
+  server.js
+  package.json
+  README.md
+```
+
+## Install
 
 ```bash
 npm install
 ```
 
-2. Create `.env.local`:
+## Run
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+node server.js
 ```
 
-3. Run database migration + seed in Supabase SQL editor:
+The app will be available at:
 
-- `supabase/migrations/001_init.sql`
-- `supabase/seed.sql`
+- `http://localhost:3000`
 
-4. Start development server:
+## How to Use
 
-```bash
-npm run dev
-```
+1. Open the app in your browser.
+2. Enter a username. If the username exists, it logs you in.
+3. Pick an unlocked lesson from the dashboard.
+4. Answer each question and read immediate feedback.
+5. Save progress at the result screen to update XP, level, streak, and completed lessons.
+6. Continue unlocking higher-level lessons.
 
-Open `http://localhost:3000`.
+## API Endpoints
 
-## API Routes
+- `GET /api/users`
+- `POST /api/users`
+- `GET /api/users/:id`
+- `PUT /api/users/:id`
+- `GET /api/lessons`
+- `GET /api/lessons/:id`
+- `POST /api/progress`
 
-- `POST /api/auth/signup` - Create account
-- `POST /api/auth/login` - Authenticate user
-- `GET /api/lessons?userId=<id>&review=true|false` - List lessons
-- `GET /api/lessons/:id` - Get lesson questions + answers
-- `POST /api/answer` - Submit selected answer, award XP
-- `GET /api/progress` - Fetch profile + completed lessons
-- `POST /api/progress` - Mark lesson completed
+## Notes
 
-## Database Schema
-
-Tables:
-
-- `users`
-- `lessons`
-- `questions`
-- `answers`
-- `progress`
-
-See SQL files in `supabase/` for full schema and sample data.
+- Level formula: `Math.floor(xp / 100)`
+- Offline-first: no external backend services are used.
