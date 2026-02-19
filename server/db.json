@@ -1,0 +1,194 @@
+{
+  "users": [],
+  "lessons": [
+    {
+      "id": 1,
+      "title": "Hand Rankings",
+      "description": "Learn how poker hands rank from strongest to weakest.",
+      "levelRequired": 0,
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which hand is strongest?",
+          "answers": [
+            { "text": "Straight", "correct": false },
+            { "text": "Flush", "correct": false },
+            { "text": "Full House", "correct": true },
+            { "text": "Two Pair", "correct": false }
+          ],
+          "explanation": "A Full House beats a Straight and a Flush in standard poker rankings."
+        },
+        {
+          "id": 2,
+          "question": "What beats a Full House?",
+          "answers": [
+            { "text": "Three of a Kind", "correct": false },
+            { "text": "Royal Flush", "correct": true },
+            { "text": "Straight", "correct": false },
+            { "text": "Two Pair", "correct": false }
+          ],
+          "explanation": "Only Four of a Kind, Straight Flush, and Royal Flush beat a Full House."
+        },
+        {
+          "id": 3,
+          "question": "Which hand is weaker than a Flush?",
+          "answers": [
+            { "text": "Straight", "correct": true },
+            { "text": "Full House", "correct": false },
+            { "text": "Four of a Kind", "correct": false },
+            { "text": "Straight Flush", "correct": false }
+          ],
+          "explanation": "A Straight is below a Flush in hand ranking order."
+        },
+        {
+          "id": 4,
+          "question": "How many cards are in a poker hand?",
+          "answers": [
+            { "text": "2", "correct": false },
+            { "text": "4", "correct": false },
+            { "text": "5", "correct": true },
+            { "text": "7", "correct": false }
+          ],
+          "explanation": "The best 5-card combination determines your poker hand."
+        },
+        {
+          "id": 5,
+          "question": "Which hand is strongest overall?",
+          "answers": [
+            { "text": "Royal Flush", "correct": true },
+            { "text": "Straight Flush", "correct": false },
+            { "text": "Four of a Kind", "correct": false },
+            { "text": "Flush", "correct": false }
+          ],
+          "explanation": "A Royal Flush is the highest possible hand in poker."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Positions",
+      "description": "Understand table position and why acting later is powerful.",
+      "levelRequired": 1,
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which position acts last postflop?",
+          "answers": [
+            { "text": "Under the Gun", "correct": false },
+            { "text": "Hijack", "correct": false },
+            { "text": "Button", "correct": true },
+            { "text": "Small Blind", "correct": false }
+          ],
+          "explanation": "The Button has the best position because it acts last after the flop."
+        },
+        {
+          "id": 2,
+          "question": "Why is late position valuable?",
+          "answers": [
+            { "text": "You post less blinds", "correct": false },
+            { "text": "You get more information before acting", "correct": true },
+            { "text": "You can see opponents' hole cards", "correct": false },
+            { "text": "You can fold for free", "correct": false }
+          ],
+          "explanation": "Acting later gives you information from opponents' actions first."
+        },
+        {
+          "id": 3,
+          "question": "Which position is considered early?",
+          "answers": [
+            { "text": "Button", "correct": false },
+            { "text": "Cutoff", "correct": false },
+            { "text": "Under the Gun", "correct": true },
+            { "text": "Big Blind", "correct": false }
+          ],
+          "explanation": "Under the Gun acts first preflop and is an early position."
+        },
+        {
+          "id": 4,
+          "question": "In which position should you play tighter ranges?",
+          "answers": [
+            { "text": "Late position", "correct": false },
+            { "text": "Early position", "correct": true },
+            { "text": "Button only", "correct": false },
+            { "text": "Never", "correct": false }
+          ],
+          "explanation": "Early position requires stronger starting hands due to acting first."
+        },
+        {
+          "id": 5,
+          "question": "Which seat is directly right of the Button?",
+          "answers": [
+            { "text": "Big Blind", "correct": false },
+            { "text": "Small Blind", "correct": true },
+            { "text": "Cutoff", "correct": false },
+            { "text": "Under the Gun", "correct": false }
+          ],
+          "explanation": "The Small Blind sits immediately to the right of the Button."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Preflop Decisions",
+      "description": "Practice when to fold, call, and raise before the flop.",
+      "levelRequired": 2,
+      "questions": [
+        {
+          "id": 1,
+          "question": "With pocket aces preflop, your default play is usually:",
+          "answers": [
+            { "text": "Fold", "correct": false },
+            { "text": "Call only", "correct": false },
+            { "text": "Raise", "correct": true },
+            { "text": "Check", "correct": false }
+          ],
+          "explanation": "Pocket aces are premium and typically should be raised preflop."
+        },
+        {
+          "id": 2,
+          "question": "From early position, weak offsuit hands are usually:",
+          "answers": [
+            { "text": "Raised", "correct": false },
+            { "text": "Folded", "correct": true },
+            { "text": "Always called", "correct": false },
+            { "text": "3-bet", "correct": false }
+          ],
+          "explanation": "In early position, folding weak offsuit hands is generally best."
+        },
+        {
+          "id": 3,
+          "question": "What is a 3-bet?",
+          "answers": [
+            { "text": "Calling the blind", "correct": false },
+            { "text": "The third community card", "correct": false },
+            { "text": "A re-raise before the flop", "correct": true },
+            { "text": "A triple check", "correct": false }
+          ],
+          "explanation": "A 3-bet is the first re-raise in a betting sequence."
+        },
+        {
+          "id": 4,
+          "question": "Which starting hand is generally strongest?",
+          "answers": [
+            { "text": "7-2 offsuit", "correct": false },
+            { "text": "A-A", "correct": true },
+            { "text": "J-4 offsuit", "correct": false },
+            { "text": "9-3 suited", "correct": false }
+          ],
+          "explanation": "Pocket aces are the strongest preflop starting hand in Hold'em."
+        },
+        {
+          "id": 5,
+          "question": "In late position with a decent hand and folded action, you should often:",
+          "answers": [
+            { "text": "Fold instantly", "correct": false },
+            { "text": "Raise to open", "correct": true },
+            { "text": "Wait for showdown", "correct": false },
+            { "text": "Show your cards", "correct": false }
+          ],
+          "explanation": "Late position allows wider opens because fewer players remain to act."
+        }
+      ]
+    }
+  ]
+}
