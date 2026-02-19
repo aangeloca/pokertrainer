@@ -7,6 +7,10 @@ body {
 }
 
 button:disabled {
+  box-shadow: 0 8px 0 rgba(5, 150, 105, 0.3);
+}
+
+.answer-button:disabled {
   opacity: 0.75;
   cursor: not-allowed;
 }

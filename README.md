@@ -1,6 +1,7 @@
 # PokerTrainer
 
 PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando localmente com persistência em JSON.
+PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offline.
 
 ## Funcionalidades
 
@@ -11,6 +12,13 @@ PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando 
 - Lição bloqueada por nível mínimo.
 - Progresso persistido em `server/db.json`.
 
+- Create or reuse a local username profile.
+- Track XP, level, streak, and completed lessons.
+- Play 3 lessons with instant answer feedback.
+- Earn **+10 XP** for each correct answer.
+- Unlock lessons based on your level.
+- Persist all user progress in `server/db.json`.
+
 ## Stack
 
 - Frontend: HTML + CSS + JavaScript (vanilla) + Tailwind via CDN
@@ -18,6 +26,12 @@ PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando 
 - Banco: JSON local (`server/db.json`) via filesystem
 
 ## Estrutura
+
+- Frontend: HTML, CSS, JavaScript (ES6), React via CDN, TailwindCSS via CDN
+- Backend: Node.js + Express
+- Database: JSON file (`server/db.json`) using filesystem persistence
+
+## Project Structure
 
 ```
 /pokertrainer
@@ -35,11 +49,14 @@ PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando 
 
 ## Instalação
 
+## Install
+
 ```bash
 npm install
 ```
 
 ## Execução
+## Run
 
 ```bash
 node server.js
@@ -57,6 +74,21 @@ Acesse: `http://localhost:3000`
 
 ## Endpoints
 
+The app will be available at:
+
+- `http://localhost:3000`
+
+## How to Use
+
+1. Open the app in your browser.
+2. Enter a username. If the username exists, it logs you in.
+3. Pick an unlocked lesson from the dashboard.
+4. Answer each question and read immediate feedback.
+5. Save progress at the result screen to update XP, level, streak, and completed lessons.
+6. Continue unlocking higher-level lessons.
+
+## API Endpoints
+
 - `GET /api/users`
 - `POST /api/users`
 - `GET /api/users/:id`
@@ -68,3 +100,7 @@ Acesse: `http://localhost:3000`
 ## Regra de nível
 
 `level = Math.floor(xp / 100)`
+## Notes
+
+- Level formula: `Math.floor(xp / 100)`
+- Offline-first: no external backend services are used.
