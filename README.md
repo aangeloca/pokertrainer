@@ -1,8 +1,16 @@
 # PokerTrainer
 
+PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando localmente com persistência em JSON.
 PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offline.
 
-## Features
+## Funcionalidades
+
+- Login/criação de usuário por username.
+- XP, nível e streak salvos em arquivo.
+- 3 lições com perguntas e feedback imediato.
+- +10 XP por resposta correta, +0 por errada.
+- Lição bloqueada por nível mínimo.
+- Progresso persistido em `server/db.json`.
 
 - Create or reuse a local username profile.
 - Track XP, level, streak, and completed lessons.
@@ -11,7 +19,13 @@ PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offli
 - Unlock lessons based on your level.
 - Persist all user progress in `server/db.json`.
 
-## Tech Stack
+## Stack
+
+- Frontend: HTML + CSS + JavaScript (vanilla) + Tailwind via CDN
+- Backend: Node.js (HTTP server nativo)
+- Banco: JSON local (`server/db.json`) via filesystem
+
+## Estrutura
 
 - Frontend: HTML, CSS, JavaScript (ES6), React via CDN, TailwindCSS via CDN
 - Backend: Node.js + Express
@@ -33,17 +47,32 @@ PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offli
   README.md
 ```
 
+## Instalação
+
 ## Install
 
 ```bash
 npm install
 ```
 
+## Execução
 ## Run
 
 ```bash
 node server.js
 ```
+
+Acesse: `http://localhost:3000`
+
+## Como testar rápido
+
+1. Abra o site, crie um usuário e entre.
+2. Jogue a primeira lição e finalize.
+3. Clique em **Salvar progresso**.
+4. Volte ao dashboard e confirme XP/Nível/Streak atualizados.
+5. Reinicie o servidor e confira que os dados continuam (persistência no `db.json`).
+
+## Endpoints
 
 The app will be available at:
 
@@ -68,6 +97,9 @@ The app will be available at:
 - `GET /api/lessons/:id`
 - `POST /api/progress`
 
+## Regra de nível
+
+`level = Math.floor(xp / 100)`
 ## Notes
 
 - Level formula: `Math.floor(xp / 100)`

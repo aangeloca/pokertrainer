@@ -1,5 +1,8 @@
 {
   "name": "pokertrainer",
+  "version": "1.0.1",
+  "description": "PokerTrainer web app simples e offline",
+
   "version": "1.0.0",
   "description": "Duolingo-style poker learning web app",
   "main": "server.js",
@@ -7,6 +10,9 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
+  "keywords": ["poker", "offline", "learning"],
+  "license": "MIT"
+
   "keywords": [
     "poker",
     "react",

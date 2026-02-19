@@ -3,6 +3,10 @@ body {
 }
 
 .duo-shadow {
+  box-shadow: 0 8px 0 rgba(5, 150, 105, 0.25);
+}
+
+button:disabled {
   box-shadow: 0 8px 0 rgba(5, 150, 105, 0.3);
 }
 
