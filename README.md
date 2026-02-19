@@ -1,70 +1,70 @@
 # PokerTrainer
 
-PokerTrainer is a Duolingo-inspired poker training web app built with **Next.js**, **React**, **Supabase**, and **TailwindCSS**.
+PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando localmente com persistência em JSON.
 
-## Features
+## Funcionalidades
 
-- Authentication (signup/login)
-- User XP, level, and streak tracking
-- Lessons organized by level
-- Multiple-choice questions with single-answer selection
-- Gamified XP progression (level up every 100 XP)
-- Completed lesson tracking + optional review mode
-- Modern UI with progress bar, XP counter, and level indicator
+- Login/criação de usuário por username.
+- XP, nível e streak salvos em arquivo.
+- 3 lições com perguntas e feedback imediato.
+- +10 XP por resposta correta, +0 por errada.
+- Lição bloqueada por nível mínimo.
+- Progresso persistido em `server/db.json`.
 
-## Tech Stack
+## Stack
 
-- Next.js (App Router)
-- React
-- Supabase (Postgres)
-- TailwindCSS
+- Frontend: HTML + CSS + JavaScript (vanilla) + Tailwind via CDN
+- Backend: Node.js (HTTP server nativo)
+- Banco: JSON local (`server/db.json`) via filesystem
 
-## Getting Started
+## Estrutura
 
-1. Install dependencies:
+```
+/pokertrainer
+  /server
+    server.js
+    db.json
+  /client
+    index.html
+    app.js
+    styles.css
+  server.js
+  package.json
+  README.md
+```
+
+## Instalação
 
 ```bash
 npm install
 ```
 
-2. Create `.env.local`:
+## Execução
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+node server.js
 ```
 
-3. Run database migration + seed in Supabase SQL editor:
+Acesse: `http://localhost:3000`
 
-- `supabase/migrations/001_init.sql`
-- `supabase/seed.sql`
+## Como testar rápido
 
-4. Start development server:
+1. Abra o site, crie um usuário e entre.
+2. Jogue a primeira lição e finalize.
+3. Clique em **Salvar progresso**.
+4. Volte ao dashboard e confirme XP/Nível/Streak atualizados.
+5. Reinicie o servidor e confira que os dados continuam (persistência no `db.json`).
 
-```bash
-npm run dev
-```
+## Endpoints
 
-Open `http://localhost:3000`.
+- `GET /api/users`
+- `POST /api/users`
+- `GET /api/users/:id`
+- `PUT /api/users/:id`
+- `GET /api/lessons`
+- `GET /api/lessons/:id`
+- `POST /api/progress`
 
-## API Routes
+## Regra de nível
 
-- `POST /api/auth/signup` - Create account
-- `POST /api/auth/login` - Authenticate user
-- `GET /api/lessons?userId=<id>&review=true|false` - List lessons
-- `GET /api/lessons/:id` - Get lesson questions + answers
-- `POST /api/answer` - Submit selected answer, award XP
-- `GET /api/progress` - Fetch profile + completed lessons
-- `POST /api/progress` - Mark lesson completed
-
-## Database Schema
-
-Tables:
-
-- `users`
-- `lessons`
-- `questions`
-- `answers`
-- `progress`
-
-See SQL files in `supabase/` for full schema and sample data.
+`level = Math.floor(xp / 100)`

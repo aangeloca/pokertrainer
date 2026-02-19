@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokerTrainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="bg-emerald-50 min-h-screen">
+    <main class="max-w-5xl mx-auto p-4 md:p-8 space-y-5">
+      <header class="bg-white rounded-3xl p-5 border-2 border-emerald-200 duo-shadow">
+        <h1 class="text-3xl font-black text-emerald-600">PokerTrainer</h1>
+        <p class="text-slate-600">Aprenda poker como um jogo, passo a passo.</p>
+      </header>
+
+      <p id="global-error" class="hidden bg-red-100 border border-red-200 text-red-700 p-3 rounded-2xl"></p>
+
+      <section id="login-section" class="bg-white rounded-3xl p-6 border-2 border-slate-200">
+        <h2 class="text-xl font-black text-slate-800 mb-3">Entrar / Criar usuário</h2>
+        <form id="login-form" class="flex flex-col md:flex-row gap-3">
+          <input id="username-input" type="text" placeholder="Seu nome de usuário" class="flex-1 p-3 rounded-2xl border-2 border-slate-200 outline-none focus:border-emerald-400" />
+          <button class="px-5 py-3 rounded-2xl bg-emerald-500 text-white font-bold hover:bg-emerald-600">Começar</button>
+        </form>
+      </section>
+
+      <section id="dashboard-section" class="hidden space-y-4">
+        <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 duo-shadow">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 id="welcome-text" class="text-2xl font-black text-emerald-700"></h2>
+              <p class="text-slate-600">Continue sua evolução no poker.</p>
+            </div>
+            <button id="logout-btn" class="text-sm text-slate-500 underline">Trocar usuário</button>
+          </div>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div class="rounded-2xl bg-emerald-50 p-4">
+              <p class="text-xs text-emerald-700">XP</p>
+              <p id="xp-value" class="text-2xl font-black text-emerald-700">0</p>
+            </div>
+            <div class="rounded-2xl bg-indigo-50 p-4">
+              <p class="text-xs text-indigo-700">Nível</p>
+              <p id="level-value" class="text-2xl font-black text-indigo-700">0</p>
+            </div>
+            <div class="rounded-2xl bg-amber-50 p-4">
+              <p class="text-xs text-amber-700">Streak</p>
+              <p id="streak-value" class="text-2xl font-black text-amber-700">0</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="flex justify-between text-sm font-bold text-indigo-700 mb-1">
+              <span>XP até próximo nível</span>
+              <span id="xp-progress-text">0/100</span>
+            </div>
+            <div class="w-full h-4 bg-indigo-100 rounded-full overflow-hidden">
+              <div id="xp-progress-fill" class="h-full bg-indigo-500 transition-all"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-black text-slate-800 mb-2">Lições</h3>
+          <div id="lesson-list" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <section id="lesson-section" class="hidden bg-white rounded-3xl p-6 border-2 border-slate-200 space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 id="lesson-title" class="text-2xl font-black text-slate-800"></h2>
+          <button id="exit-lesson-btn" class="text-sm text-slate-500 underline">Sair da lição</button>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-sm text-emerald-700 font-bold mb-1">
+            <span>Progresso da lição</span>
+            <span id="lesson-progress-text">0%</span>
+          </div>
+          <div class="w-full h-4 rounded-full bg-emerald-100 overflow-hidden">
+            <div id="lesson-progress-fill" class="h-full bg-emerald-500 transition-all"></div>
+          </div>
+        </div>
+
+        <div id="question-card" class="space-y-3"></div>
+        <button id="next-btn" class="w-full bg-indigo-500 text-white rounded-2xl py-3 font-black disabled:bg-slate-300" disabled>Próxima</button>
+      </section>
+
+      <section id="result-section" class="hidden bg-white rounded-3xl p-8 border-2 border-emerald-200 duo-shadow text-center space-y-4">
+        <h2 class="text-3xl font-black text-emerald-700">Lição concluída! 🎉</h2>
+        <p id="result-xp" class="text-slate-700"></p>
+        <p id="result-score" class="text-slate-700"></p>
+        <div class="flex justify-center gap-3">
+          <button id="result-back-btn" class="px-5 py-3 rounded-2xl bg-slate-200 font-bold">Voltar</button>
+          <button id="result-save-btn" class="px-5 py-3 rounded-2xl bg-emerald-500 text-white font-bold">Salvar progresso</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
