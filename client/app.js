@@ -1,685 +1,620 @@
 const state = {
   user: null,
   lessons: [],
+  scenarios: [],
+  ranges: null,
+  glossary: [],
+  view: 'dashboard',
   activeLesson: null,
-  questionIndex: 0,
-  score: 0,
-  answers: [],
-  selectedAnswer: null
+  lessonIndex: 0,
+  lessonAnswers: [],
+  selectedAnswer: null,
+  activeScenario: null,
+  scenarioResult: null,
+  rangePosition: 'BTN'
 };
 
 const ui = {
-  error: document.getElementById('global-error'),
-  loginSection: document.getElementById('login-section'),
-  dashboardSection: document.getElementById('dashboard-section'),
-  lessonSection: document.getElementById('lesson-section'),
-  resultSection: document.getElementById('result-section'),
+  loginView: document.getElementById('login-view'),
+  appView: document.getElementById('app-view'),
   loginForm: document.getElementById('login-form'),
   usernameInput: document.getElementById('username-input'),
-  welcomeText: document.getElementById('welcome-text'),
-  xpValue: document.getElementById('xp-value'),
-  levelValue: document.getElementById('level-value'),
-  streakValue: document.getElementById('streak-value'),
-  xpProgressText: document.getElementById('xp-progress-text'),
-  xpProgressFill: document.getElementById('xp-progress-fill'),
-  lessonList: document.getElementById('lesson-list'),
-  lessonTitle: document.getElementById('lesson-title'),
-  lessonProgressText: document.getElementById('lesson-progress-text'),
-  lessonProgressFill: document.getElementById('lesson-progress-fill'),
-  questionCard: document.getElementById('question-card'),
-  nextBtn: document.getElementById('next-btn'),
-  resultXp: document.getElementById('result-xp'),
-  resultScore: document.getElementById('result-score'),
+  loginError: document.getElementById('login-error'),
+  globalError: document.getElementById('global-error'),
+  profileName: document.getElementById('profile-name'),
   logoutBtn: document.getElementById('logout-btn'),
-  exitLessonBtn: document.getElementById('exit-lesson-btn'),
-  resultBackBtn: document.getElementById('result-back-btn'),
-  resultSaveBtn: document.getElementById('result-save-btn')
+  quickDrillBtn: document.getElementById('quick-drill-btn'),
+  viewKicker: document.getElementById('view-kicker'),
+  viewTitle: document.getElementById('view-title'),
+  navItems: Array.from(document.querySelectorAll('.nav-item')),
+  panels: {
+    dashboard: document.getElementById('dashboard-view'),
+    lessons: document.getElementById('lessons-view'),
+    lessonPlayer: document.getElementById('lesson-player-view'),
+    trainer: document.getElementById('trainer-view'),
+    ranges: document.getElementById('ranges-view'),
+    glossary: document.getElementById('glossary-view')
+  }
 };
 
-function showError(message = '') {
-  if (!message) {
-    ui.error.classList.add('hidden');
-    ui.error.textContent = '';
-    return;
-  }
+const titles = {
+  dashboard: ['Dashboard', 'Plano de treino'],
+  lessons: ['Licoes', 'Fundamentos GTO'],
+  lessonPlayer: ['Licao ativa', 'Mesa de estudo'],
+  trainer: ['Drill GTO', 'Spot de decisao'],
+  ranges: ['Ranges', 'Matriz preflop'],
+  glossary: ['Glossario', 'Conceitos essenciais']
+};
 
-  ui.error.textContent = message;
-  ui.error.classList.remove('hidden');
+const actionLabels = {
+  fold: 'Fold',
+  call: 'Call',
+  raise: 'Raise',
+  check: 'Check',
+  bet_small: 'Bet pequeno',
+  bet_big: 'Bet grande',
+  fold_all_bluffcatchers: 'Foldar bluff-catchers',
+  defend_top_half: 'Defender topo do range',
+  raise_any_pair: 'Raise com qualquer par',
+  call_all_pairs: 'Pagar todos os pares',
+  fold_more: 'Foldar mais',
+  raise_bluff: 'Raise blefe'
+};
+
+function escapeHTML(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function pct(value, total) {
+  if (!total) return 0;
+  return Math.round((value / total) * 100);
+}
+
+function showError(message = '') {
+  ui.globalError.textContent = message;
+  ui.globalError.classList.toggle('hidden', !message);
 }
 
 async function api(path, options) {
   const res = await fetch(path, options);
   const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.error || 'Erro na API.');
-  }
-
+  if (!res.ok) throw new Error(data.error || 'Falha na requisicao.');
   return data;
 }
 
-function showSection(name) {
-  ui.loginSection.classList.add('hidden');
-  ui.dashboardSection.classList.add('hidden');
-  ui.lessonSection.classList.add('hidden');
-  ui.resultSection.classList.add('hidden');
+function setAuthenticated(user) {
+  state.user = user;
+  ui.loginView.classList.add('hidden');
+  ui.appView.classList.remove('hidden');
+  ui.profileName.textContent = user.username;
+  setView('dashboard');
+}
 
-  if (name === 'login') ui.loginSection.classList.remove('hidden');
-  if (name === 'dashboard') ui.dashboardSection.classList.remove('hidden');
-  if (name === 'lesson') ui.lessonSection.classList.remove('hidden');
-  if (name === 'result') ui.resultSection.classList.remove('hidden');
+function setView(view) {
+  state.view = view;
+  state.activeLesson = view === 'lessonPlayer' ? state.activeLesson : null;
+
+  Object.values(ui.panels).forEach((panel) => panel.classList.add('hidden'));
+  const panelKey = view === 'lessonPlayer' ? 'lessonPlayer' : view;
+  ui.panels[panelKey].classList.remove('hidden');
+
+  ui.navItems.forEach((item) => {
+    item.classList.toggle('active', item.dataset.view === view);
+  });
+
+  const [kicker, title] = titles[view] || titles.dashboard;
+  ui.viewKicker.textContent = kicker;
+  ui.viewTitle.textContent = title;
+  showError('');
+
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'lessons') renderLessons();
+  if (view === 'trainer') renderTrainer();
+  if (view === 'ranges') renderRanges();
+  if (view === 'glossary') renderGlossary();
+}
+
+function accuracyLabel(value, total) {
+  if (!total) return '0%';
+  return `${pct(value, total)}%`;
 }
 
 function renderDashboard() {
   const user = state.user;
-  ui.welcomeText.textContent = `Olá, ${user.username} 👋`;
-  ui.xpValue.textContent = user.xp;
-  ui.levelValue.textContent = user.level;
-  ui.streakValue.textContent = user.streak;
+  const nextLevelXp = 250;
+  const levelProgress = user.xp % nextLevelXp;
+  const lessonAccuracy = accuracyLabel(user.stats.correctAnswers, user.stats.totalAnswers);
+  const actionAccuracy = accuracyLabel(user.stats.optimalActions, user.stats.totalActions);
+  const unlocked = state.lessons.filter((lesson) => user.level >= lesson.levelRequired).length;
 
-  const currentChunk = user.xp % 100;
-  ui.xpProgressText.textContent = `${currentChunk}/100`;
-  ui.xpProgressFill.style.width = `${currentChunk}%`;
+  ui.panels.dashboard.innerHTML = `
+    <div class="grid-3">
+      <article class="stat-card"><span>XP total</span><strong>${user.xp}</strong></article>
+      <article class="stat-card"><span>Nivel GTO</span><strong>${user.level}</strong></article>
+      <article class="stat-card"><span>Streak de treino</span><strong>${user.streak}</strong></article>
+    </div>
 
-  ui.lessonList.innerHTML = '';
+    <article class="card">
+      <div class="lesson-card">
+        <div>
+          <h3>Progresso para o proximo nivel</h3>
+          <p class="card-subtitle">${levelProgress}/${nextLevelXp} XP no nivel atual</p>
+        </div>
+        <button id="dashboard-lesson-btn" class="primary-button" type="button">Continuar licoes</button>
+      </div>
+      <div class="progress-track" aria-label="Progresso de XP">
+        <div class="progress-fill" style="width: ${pct(levelProgress, nextLevelXp)}%"></div>
+      </div>
+    </article>
 
-  state.lessons
-    .sort((a, b) => a.id - b.id)
-    .forEach((lesson) => {
-      const locked = user.level < lesson.levelRequired;
-      const completed = user.completedLessons.includes(lesson.id);
+    <div class="grid-2">
+      <article class="card">
+        <h3>Precisao de licoes</h3>
+        <p class="card-subtitle">${lessonAccuracy} em ${user.stats.totalAnswers} perguntas respondidas.</p>
+        <div class="pill-row">
+          <span class="pill gold">${user.completedLessons.length}/${state.lessons.length} licoes concluidas</span>
+          <span class="pill blue">${unlocked} desbloqueadas</span>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Decisoes GTO</h3>
+        <p class="card-subtitle">${actionAccuracy} de acoes principais nos drills.</p>
+        <div class="pill-row">
+          <span class="pill gold">${user.completedScenarios.length}/${state.scenarios.length} spots pontuados</span>
+          <span class="pill blue">${user.stats.scenariosPlayed} tentativas</span>
+        </div>
+      </article>
+    </div>
 
-      const card = document.createElement('article');
-      card.className = 'bg-white border-2 border-slate-200 rounded-2xl p-4 flex justify-between items-center gap-3';
+    <article class="card">
+      <div class="lesson-card">
+        <div>
+          <h3>Dominio por conceito</h3>
+          <p class="card-subtitle">Pontuacao acumulada quando voce acerta questoes e toma decisoes boas.</p>
+        </div>
+        <button id="dashboard-drill-btn" class="secondary-button" type="button">Treinar spot</button>
+      </div>
+      <div class="mastery-list">${renderMasteryRows(user.stats.concepts)}</div>
+    </article>
+  `;
 
-      const info = document.createElement('div');
-      info.innerHTML = `
-        <h3 class="font-extrabold text-lg text-slate-800">${lesson.title}</h3>
-        <p class="text-sm text-slate-600">${lesson.description}</p>
-        <p class="text-xs mt-2 text-slate-500">Requer nível ${lesson.levelRequired}</p>
-      `;
-
-      const btn = document.createElement('button');
-      btn.className = 'px-4 py-2 rounded-xl font-bold';
-      btn.textContent = locked ? 'Bloqueada' : completed ? 'Refazer' : 'Jogar';
-      btn.disabled = locked;
-
-      if (locked) btn.classList.add('bg-slate-200', 'text-slate-500', 'cursor-not-allowed');
-      if (!locked && completed) btn.classList.add('bg-amber-400', 'text-amber-900');
-      if (!locked && !completed) btn.classList.add('bg-emerald-500', 'text-white');
-
-      btn.addEventListener('click', () => startLesson(lesson.id));
-
-      card.appendChild(info);
-      card.appendChild(btn);
-      ui.lessonList.appendChild(card);
-    });
-}
-
-function updateLessonProgress() {
-  const total = state.activeLesson.questions.length;
-  const percent = Math.round((state.questionIndex / total) * 100);
-  ui.lessonProgressText.textContent = `${percent}%`;
-  ui.lessonProgressFill.style.width = `${percent}%`;
-}
-
-function renderQuestion() {
-  const question = state.activeLesson.questions[state.questionIndex];
-  const answerLocked = state.selectedAnswer !== null;
-
-  ui.questionCard.innerHTML = '';
-
-  const title = document.createElement('h3');
-  title.className = 'text-xl font-black text-slate-800';
-  title.textContent = question.question;
-  ui.questionCard.appendChild(title);
-
-  const answersWrap = document.createElement('div');
-  answersWrap.className = 'grid gap-3';
-
-  question.answers.forEach((answer, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'text-left p-3 rounded-2xl font-semibold border-2 border-slate-200 hover:border-emerald-300';
-    btn.textContent = answer.text;
-    btn.disabled = answerLocked;
-
-    btn.addEventListener('click', () => handleAnswer(index));
-    answersWrap.appendChild(btn);
+  document.getElementById('dashboard-lesson-btn').addEventListener('click', () => setView('lessons'));
+  document.getElementById('dashboard-drill-btn').addEventListener('click', () => {
+    pickNextScenario();
+    setView('trainer');
   });
-
-  ui.questionCard.appendChild(answersWrap);
-
-  if (answerLocked) {
-    renderFeedback(question);
-  }
-
-  ui.nextBtn.disabled = !answerLocked;
-  ui.nextBtn.textContent =
-    state.questionIndex + 1 >= state.activeLesson.questions.length ? 'Ver resultado' : 'Próxima';
 }
 
-function renderFeedback(question) {
-  const box = document.createElement('div');
-  box.className = 'rounded-2xl p-4 bg-slate-50 border border-slate-200';
+function renderMasteryRows(concepts) {
+  const labels = {
+    preflop: 'Preflop',
+    ranges: 'Ranges',
+    equity: 'Equidade',
+    potOdds: 'Pot odds',
+    blockers: 'Blockers',
+    mdf: 'MDF'
+  };
 
-  const text = document.createElement('p');
-  text.className = `font-black ${state.selectedAnswer.correct ? 'text-emerald-700' : 'text-red-600'}`;
-  text.textContent = state.selectedAnswer.correct ? 'Correta! +10 XP' : 'Errada. +0 XP';
-
-  const explanation = document.createElement('p');
-  explanation.className = 'text-sm text-slate-600 mt-1';
-  explanation.textContent = question.explanation;
-
-  box.appendChild(text);
-  box.appendChild(explanation);
-  ui.questionCard.appendChild(box);
+  return Object.entries(labels)
+    .map(([key, label]) => {
+      const value = concepts[key] || 0;
+      return `
+        <div class="mastery-row">
+          <strong>${label}</strong>
+          <div class="progress-track"><div class="progress-fill" style="width: ${Math.min(value * 10, 100)}%"></div></div>
+          <span>${value}</span>
+        </div>
+      `;
+    })
+    .join('');
 }
 
-function handleAnswer(answerIndex) {
-  const question = state.activeLesson.questions[state.questionIndex];
-  const answer = question.answers[answerIndex];
-  const correct = !!answer.correct;
+function renderLessons() {
+  ui.panels.lessons.innerHTML = `
+    <div class="lesson-list">
+      ${state.lessons.map(renderLessonCard).join('')}
+    </div>
+  `;
 
-  state.selectedAnswer = { answerIndex, correct };
-  state.answers.push({ questionId: question.id, correct });
+  ui.panels.lessons.querySelectorAll('[data-lesson-id]').forEach((button) => {
+    button.addEventListener('click', () => startLesson(Number(button.dataset.lessonId)));
+  });
+}
 
-  if (correct) state.score += 10;
+function renderLessonCard(lesson) {
+  const locked = state.user.level < lesson.levelRequired;
+  const completed = state.user.completedLessons.includes(lesson.id);
+  const concepts = lesson.concepts.map((concept) => `<span class="pill">${concept}</span>`).join('');
 
-  renderQuestion();
+  return `
+    <article class="card lesson-card">
+      <div>
+        <span class="eyebrow">Nivel ${lesson.levelRequired}</span>
+        <h3>${escapeHTML(lesson.title)}</h3>
+        <p class="card-subtitle">${escapeHTML(lesson.description)}</p>
+        <div class="pill-row">
+          ${concepts}
+          ${completed ? '<span class="pill gold">Concluida</span>' : ''}
+          ${locked ? '<span class="pill">Bloqueada</span>' : ''}
+        </div>
+      </div>
+      <button class="${locked ? 'ghost-button' : 'primary-button'}" data-lesson-id="${lesson.id}" ${locked ? 'disabled' : ''} type="button">
+        ${completed ? 'Refazer' : locked ? 'Bloqueada' : 'Iniciar'}
+      </button>
+    </article>
+  `;
 }
 
 function startLesson(lessonId) {
   state.activeLesson = state.lessons.find((lesson) => lesson.id === lessonId);
-  state.questionIndex = 0;
-  state.score = 0;
-  state.answers = [];
+  state.lessonIndex = 0;
+  state.lessonAnswers = [];
   state.selectedAnswer = null;
-
-  ui.lessonTitle.textContent = state.activeLesson.title;
-  updateLessonProgress();
-  renderQuestion();
-  showSection('lesson');
+  setView('lessonPlayer');
+  renderLessonPlayer();
 }
 
-function nextQuestion() {
-  if (!state.selectedAnswer) return;
-
-  const total = state.activeLesson.questions.length;
-
-  if (state.questionIndex + 1 >= total) {
-    ui.resultXp.textContent = `Você ganhou ${state.score} XP nesta lição.`;
-    ui.resultScore.textContent = `Acertos: ${state.answers.filter((item) => item.correct).length}/${total}`;
-    showSection('result');
+function renderLessonPlayer(finalResult = null) {
+  const lesson = state.activeLesson;
+  if (!lesson) {
+    setView('lessons');
     return;
   }
 
-  state.questionIndex += 1;
-  state.selectedAnswer = null;
-  updateLessonProgress();
-  renderQuestion();
+  if (finalResult) {
+    ui.panels.lessonPlayer.innerHTML = `
+      <article class="lesson-player">
+        <span class="eyebrow">Resultado</span>
+        <h3>${escapeHTML(lesson.title)}</h3>
+        <p>Voce acertou <strong>${finalResult.correct}/${finalResult.total}</strong> e ganhou <strong>${finalResult.xpEarned} XP</strong>.</p>
+        <div class="player-footer">
+          <button id="back-lessons-btn" class="ghost-button" type="button">Voltar para licoes</button>
+          <button id="go-drill-btn" class="primary-button" type="button">Aplicar em drill</button>
+        </div>
+      </article>
+    `;
+    document.getElementById('back-lessons-btn').addEventListener('click', () => setView('lessons'));
+    document.getElementById('go-drill-btn').addEventListener('click', () => {
+      pickNextScenario();
+      setView('trainer');
+    });
+    return;
+  }
+
+  const question = lesson.questions[state.lessonIndex];
+  const total = lesson.questions.length;
+  const progress = pct(state.lessonIndex, total);
+  const answerButtons = question.answers
+    .map((answer, index) => {
+      const selected = state.selectedAnswer?.index === index;
+      const locked = state.selectedAnswer !== null;
+      const className = locked && answer.correct ? 'correct' : locked && selected ? 'wrong' : '';
+      return `
+        <button class="answer-button ${className}" data-answer-index="${index}" ${locked ? 'disabled' : ''} type="button">
+          ${escapeHTML(answer.text)}
+        </button>
+      `;
+    })
+    .join('');
+
+  ui.panels.lessonPlayer.innerHTML = `
+    <article class="lesson-player">
+      <div class="lesson-card">
+        <div>
+          <span class="eyebrow">Pergunta ${state.lessonIndex + 1}/${total}</span>
+          <h3>${escapeHTML(lesson.title)}</h3>
+        </div>
+        <button id="exit-lesson-btn" class="ghost-button" type="button">Sair</button>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width: ${progress}%"></div></div>
+      <div class="theory-box">
+        <ul>${lesson.theory.map((item) => `<li>${escapeHTML(item)}</li>`).join('')}</ul>
+      </div>
+      <h3 class="question-title">${escapeHTML(question.question)}</h3>
+      <div class="answer-grid">${answerButtons}</div>
+      ${state.selectedAnswer ? renderLessonFeedback(question) : ''}
+      <div class="player-footer">
+        <button id="prev-question-btn" class="ghost-button" type="button" ${state.lessonIndex === 0 ? 'disabled' : ''}>Anterior</button>
+        <button id="next-question-btn" class="primary-button" type="button" ${state.selectedAnswer ? '' : 'disabled'}>
+          ${state.lessonIndex + 1 === total ? 'Finalizar licao' : 'Proxima'}
+        </button>
+      </div>
+    </article>
+  `;
+
+  document.getElementById('exit-lesson-btn').addEventListener('click', () => setView('lessons'));
+  document.getElementById('prev-question-btn').addEventListener('click', previousQuestion);
+  document.getElementById('next-question-btn').addEventListener('click', nextQuestion);
+  ui.panels.lessonPlayer.querySelectorAll('[data-answer-index]').forEach((button) => {
+    button.addEventListener('click', () => selectAnswer(Number(button.dataset.answerIndex)));
+  });
 }
 
-async function saveProgress() {
+function renderLessonFeedback(question) {
+  const selected = question.answers[state.selectedAnswer.index];
+  return `
+    <div class="feedback">
+      <strong>${selected.correct ? 'Correto: +25 XP potencial' : 'Ainda nao: revise a logica'}</strong>
+      <span>${escapeHTML(question.explanation)}</span>
+    </div>
+  `;
+}
+
+function selectAnswer(index) {
+  const question = state.activeLesson.questions[state.lessonIndex];
+  state.selectedAnswer = { index, correct: Boolean(question.answers[index]?.correct) };
+  state.lessonAnswers = state.lessonAnswers.filter((item) => item.questionId !== question.id);
+  state.lessonAnswers.push({ questionId: question.id, answerIndex: index });
+  renderLessonPlayer();
+}
+
+function previousQuestion() {
+  if (state.lessonIndex === 0) return;
+  state.lessonIndex -= 1;
+  const question = state.activeLesson.questions[state.lessonIndex];
+  const previous = state.lessonAnswers.find((item) => item.questionId === question.id);
+  state.selectedAnswer = previous ? { index: previous.answerIndex, correct: Boolean(question.answers[previous.answerIndex]?.correct) } : null;
+  renderLessonPlayer();
+}
+
+async function nextQuestion() {
+  if (!state.selectedAnswer) return;
+  if (state.lessonIndex + 1 < state.activeLesson.questions.length) {
+    state.lessonIndex += 1;
+    const question = state.activeLesson.questions[state.lessonIndex];
+    const previous = state.lessonAnswers.find((item) => item.questionId === question.id);
+    state.selectedAnswer = previous ? { index: previous.answerIndex, correct: Boolean(question.answers[previous.answerIndex]?.correct) } : null;
+    renderLessonPlayer();
+    return;
+  }
+
   try {
-    const data = await api('/api/progress', {
+    const data = await api('/api/lesson-result', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         userId: state.user.id,
         lessonId: state.activeLesson.id,
-        xpEarned: state.score
+        answers: state.lessonAnswers
       })
     });
-
     state.user = data.user;
-    state.activeLesson = null;
-    showError('');
-    renderDashboard();
-    showSection('dashboard');
+    ui.profileName.textContent = data.user.username;
+    renderLessonPlayer(data.result);
   } catch (err) {
     showError(err.message);
   }
 }
 
-async function loginOrCreate(username) {
-  const users = await api('/api/users');
-  const found = users.find((item) => item.username.toLowerCase() === username.toLowerCase());
-  if (found) return found;
+function pickNextScenario() {
+  const incomplete = state.scenarios.find((scenario) => !state.user.completedScenarios.includes(scenario.id));
+  state.activeScenario = incomplete || state.scenarios[(state.user.stats.scenariosPlayed || 0) % state.scenarios.length];
+  state.scenarioResult = null;
+}
 
-  return api('/api/users', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username })
+function renderTrainer() {
+  if (!state.activeScenario) pickNextScenario();
+  const scenario = state.activeScenario;
+  const actionButtons = scenario.actions
+    .map((action) => {
+      let className = '';
+      if (state.scenarioResult) {
+        if (action === state.scenarioResult.bestAction) className = 'correct';
+        if (action === state.scenarioResult.action && action !== state.scenarioResult.bestAction) className = 'wrong';
+      }
+
+      return `
+        <button class="action-button ${className}" data-action="${action}" ${state.scenarioResult ? 'disabled' : ''} type="button">
+          ${escapeHTML(actionLabels[action] || action)}
+        </button>
+      `;
+    })
+    .join('');
+
+  ui.panels.trainer.innerHTML = `
+    <article class="scenario-card">
+      <div class="lesson-card">
+        <div>
+          <span class="eyebrow">${escapeHTML(scenario.street)}</span>
+          <h3>${escapeHTML(scenario.title)}</h3>
+          <p class="card-subtitle">${escapeHTML(scenario.facing)}</p>
+        </div>
+        <button id="new-scenario-btn" class="ghost-button" type="button">Novo spot</button>
+      </div>
+      <div class="scenario-meta">
+        <div class="meta-box"><span>Hero</span><strong>${escapeHTML(scenario.hero)}</strong></div>
+        <div class="meta-box"><span>Vilao</span><strong>${escapeHTML(scenario.villain)}</strong></div>
+        <div class="meta-box"><span>Mao</span><strong>${escapeHTML(scenario.hand)}</strong></div>
+        <div class="meta-box"><span>Pote</span><strong>${escapeHTML(scenario.pot)}bb</strong></div>
+      </div>
+      ${scenario.board ? `<div class="card-subtitle"><strong>Board:</strong> ${escapeHTML(scenario.board)}</div>` : ''}
+      <h3 class="question-title">${escapeHTML(scenario.question)}</h3>
+      <div class="action-grid">${actionButtons}</div>
+      ${state.scenarioResult ? renderScenarioFeedback(scenario, state.scenarioResult) : ''}
+    </article>
+  `;
+
+  document.getElementById('new-scenario-btn').addEventListener('click', () => {
+    const currentIndex = state.scenarios.findIndex((item) => item.id === state.activeScenario.id);
+    state.activeScenario = state.scenarios[(currentIndex + 1) % state.scenarios.length];
+    state.scenarioResult = null;
+    renderTrainer();
   });
+
+  ui.panels.trainer.querySelectorAll('[data-action]').forEach((button) => {
+    button.addEventListener('click', () => submitScenario(button.dataset.action));
+  });
+}
+
+function renderScenarioFeedback(scenario, result) {
+  const bars = Object.entries(scenario.gto.frequencies)
+    .map(([action, frequency]) => `
+      <div class="frequency-row">
+        <span>${escapeHTML(actionLabels[action] || action)}</span>
+        <div class="bar"><span style="width: ${frequency}%"></span></div>
+        <span>${frequency}%</span>
+      </div>
+    `)
+    .join('');
+
+  return `
+    <div class="feedback">
+      <strong>${result.isOptimal ? 'Acao principal: +' + result.xpEarned + ' XP' : result.isInMix ? 'Acao mista: +' + result.xpEarned + ' XP' : 'Fora da estrategia base'}</strong>
+      <span>${escapeHTML(scenario.explanation)}</span>
+      <div class="frequency-bars">${bars}</div>
+      <div class="pill-row">
+        <span class="pill gold">Melhor acao: ${escapeHTML(actionLabels[result.bestAction] || result.bestAction)}</span>
+        <span class="pill blue">Tamanho: ${escapeHTML(scenario.gto.size)}</span>
+      </div>
+    </div>
+  `;
+}
+
+async function submitScenario(action) {
+  try {
+    const data = await api('/api/scenario-result', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: state.user.id,
+        scenarioId: state.activeScenario.id,
+        action
+      })
+    });
+    state.user = data.user;
+    state.scenarioResult = data.result;
+    ui.profileName.textContent = data.user.username;
+    renderTrainer();
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+function renderRanges() {
+  const positions = state.ranges.positions
+    .map((position) => `
+      <button class="segment-button ${position === state.rangePosition ? 'active' : ''}" data-position="${position}" type="button">
+        ${position}
+      </button>
+    `)
+    .join('');
+
+  ui.panels.ranges.innerHTML = `
+    <article class="card">
+      <div class="lesson-card">
+        <div>
+          <h3>Range de open/defesa por posicao</h3>
+          <p class="card-subtitle">Use como mapa de estudo, nao como ordem rigida. Stack, rake e mesa alteram frequencias.</p>
+        </div>
+      </div>
+      <div class="range-toolbar">
+        <div class="segmented">${positions}</div>
+      </div>
+      <div class="range-legend">
+        <span><i class="legend-swatch" style="background:#167456"></i>Raise</span>
+        <span><i class="legend-swatch" style="background:#3f6fb5"></i>Call</span>
+        <span><i class="legend-swatch" style="background:#f0c14b"></i>Mix</span>
+        <span><i class="legend-swatch" style="background:#f8faf9;border:1px solid #d8e0dd"></i>Fold</span>
+      </div>
+    </article>
+    <div class="matrix-wrap">
+      <div class="range-matrix">${renderRangeCells()}</div>
+    </div>
+  `;
+
+  ui.panels.ranges.querySelectorAll('[data-position]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.rangePosition = button.dataset.position;
+      renderRanges();
+    });
+  });
+}
+
+function getHandClass(hand) {
+  const chart = state.ranges.charts[state.rangePosition] || {};
+  if ((chart.raise || []).includes(hand)) return 'raise';
+  if ((chart.call || []).includes(hand)) return 'call';
+  if ((chart.mix || []).includes(hand)) return 'mix';
+  return 'fold';
+}
+
+function renderRangeCells() {
+  return state.ranges.hands
+    .flat()
+    .map((hand) => `<div class="hand-cell ${getHandClass(hand)}">${hand}</div>`)
+    .join('');
+}
+
+function renderGlossary() {
+  ui.panels.glossary.innerHTML = `
+    <div class="glossary-list">
+      ${state.glossary.map((item) => `
+        <article class="card">
+          <h3>${escapeHTML(item.term)}</h3>
+          <p class="card-subtitle">${escapeHTML(item.definition)}</p>
+        </article>
+      `).join('')}
+    </div>
+  `;
 }
 
 async function init() {
   try {
-    state.lessons = await api('/api/lessons');
-    showSection('login');
-    showError('');
+    const data = await api('/api/bootstrap');
+    state.lessons = data.lessons;
+    state.scenarios = data.scenarios;
+    state.ranges = data.ranges;
+    state.glossary = data.glossary;
   } catch (err) {
-    showError('Não foi possível carregar as lições.');
+    ui.loginError.textContent = 'Nao foi possivel carregar o app. Inicie o servidor novamente.';
   }
 }
 
 ui.loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const username = ui.usernameInput.value.trim();
+  ui.loginError.textContent = '';
 
+  const username = ui.usernameInput.value.trim();
   if (!username) {
-    showError('Digite um nome de usuário.');
+    ui.loginError.textContent = 'Digite um usuario para continuar.';
     return;
   }
 
   try {
-    state.user = await loginOrCreate(username);
+    const user = await api('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
     ui.usernameInput.value = '';
-    showError('');
-    renderDashboard();
-    showSection('dashboard');
+    setAuthenticated(user);
   } catch (err) {
-    showError(err.message);
+    ui.loginError.textContent = err.message;
   }
 });
 
 ui.logoutBtn.addEventListener('click', () => {
   state.user = null;
-  state.activeLesson = null;
-  showError('');
-  showSection('login');
+  ui.appView.classList.add('hidden');
+  ui.loginView.classList.remove('hidden');
+  ui.profileName.textContent = 'Sem usuario';
 });
 
-ui.exitLessonBtn.addEventListener('click', () => {
-  state.activeLesson = null;
-  renderDashboard();
-  showSection('dashboard');
+ui.navItems.forEach((item) => {
+  item.addEventListener('click', () => {
+    if (!state.user) return;
+    setView(item.dataset.view);
+  });
 });
 
-ui.nextBtn.addEventListener('click', nextQuestion);
-ui.resultBackBtn.addEventListener('click', () => {
-  state.activeLesson = null;
-  renderDashboard();
-  showSection('dashboard');
+ui.quickDrillBtn.addEventListener('click', () => {
+  pickNextScenario();
+  setView('trainer');
 });
-ui.resultSaveBtn.addEventListener('click', saveProgress);
 
 init();
-const { useEffect, useMemo, useState } = React;
-
-function ProgressBar({ current, total }) {
-  const percent = total === 0 ? 0 : Math.round((current / total) * 100);
-
-  return (
-    <div>
-      <div className="flex justify-between text-sm text-emerald-700 font-bold mb-1">
-        <span>Lesson Progress</span>
-        <span>{percent}%</span>
-      </div>
-      <div className="w-full h-4 rounded-full bg-emerald-100 overflow-hidden">
-        <div
-          className="h-full bg-emerald-500 transition-all duration-300"
-          style={{ width: `${percent}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-}
-
-function XPBar({ xp }) {
-  const currentChunk = xp % 100;
-  const percent = currentChunk;
-
-  return (
-    <div>
-      <div className="flex justify-between text-sm text-indigo-700 font-bold mb-1">
-        <span>XP to next level</span>
-        <span>{currentChunk}/100</span>
-      </div>
-      <div className="w-full h-4 rounded-full bg-indigo-100 overflow-hidden">
-        <div
-          className="h-full bg-indigo-500 transition-all duration-300"
-          style={{ width: `${percent}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-}
-
-function Login({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setError('');
-
-    if (!username.trim()) {
-      setError('Please enter a username.');
-      return;
-    }
-
-    try {
-      const usersRes = await fetch('/api/users');
-      const users = await usersRes.json();
-      const existingUser = users.find(
-        (user) => user.username.toLowerCase() === username.trim().toLowerCase()
-      );
-
-      if (existingUser) {
-        onLogin(existingUser);
-        return;
-      }
-
-      const createRes = await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
-      });
-
-      if (!createRes.ok) {
-        const data = await createRes.json();
-        throw new Error(data.error || 'Could not create user.');
-      }
-
-      const newUser = await createRes.json();
-      onLogin(newUser);
-    } catch (submitError) {
-      setError(submitError.message);
-    }
-  }
-
-  return (
-    <section className="max-w-md mx-auto bg-white rounded-3xl p-8 duo-shadow border-2 border-emerald-200">
-      <h1 className="text-3xl font-black text-emerald-600 mb-2 text-center">PokerTrainer</h1>
-      <p className="text-center text-slate-600 mb-6">Train poker skills like a game.</p>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="Enter username"
-          className="w-full p-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none"
-        />
-        {error ? <p className="text-red-500 text-sm">{error}</p> : null}
-        <button
-          type="submit"
-          className="w-full bg-emerald-500 text-white font-bold py-3 rounded-2xl hover:bg-emerald-600 transition"
-        >
-          Start Training
-        </button>
-      </form>
-    </section>
-  );
-}
-
-function LessonCard({ lesson, userLevel, completed, onSelect }) {
-  const locked = userLevel < lesson.levelRequired;
-
-  return (
-    <article className="bg-white border-2 border-slate-200 rounded-2xl p-5 flex justify-between items-center">
-      <div>
-        <h3 className="font-extrabold text-lg text-slate-800">{lesson.title}</h3>
-        <p className="text-sm text-slate-600">{lesson.description}</p>
-        <p className="text-xs mt-2 text-slate-500">Requires level {lesson.levelRequired}</p>
-      </div>
-      <button
-        onClick={() => onSelect(lesson)}
-        disabled={locked}
-        className={`px-4 py-2 rounded-xl font-bold ${locked
-            ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
-            : completed
-              ? 'bg-amber-400 text-amber-900'
-              : 'bg-emerald-500 text-white hover:bg-emerald-600'
-          }`}
-      >
-        {locked ? 'Locked' : completed ? 'Replay' : 'Play'}
-      </button>
-    </article>
-  );
-}
-
-function Dashboard({ user, lessons, onSelectLesson, onLogout }) {
-  return (
-    <section className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-white rounded-3xl p-6 border-2 border-emerald-200 duo-shadow">
-        <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
-          <div>
-            <h2 className="text-2xl font-black text-emerald-700">Hi, {user.username} 👋</h2>
-            <p className="text-slate-600">Keep your poker streak alive.</p>
-          </div>
-          <button className="text-sm text-slate-500 underline" onClick={onLogout}>
-            Switch user
-          </button>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4 mb-4">
-          <div className="bg-emerald-50 rounded-2xl p-4">
-            <p className="text-xs text-emerald-700">XP</p>
-            <p className="text-2xl font-black text-emerald-700">{user.xp}</p>
-          </div>
-          <div className="bg-indigo-50 rounded-2xl p-4">
-            <p className="text-xs text-indigo-700">Level</p>
-            <p className="text-2xl font-black text-indigo-700">{user.level}</p>
-          </div>
-          <div className="bg-amber-50 rounded-2xl p-4">
-            <p className="text-xs text-amber-700">Streak</p>
-            <p className="text-2xl font-black text-amber-700">{user.streak}</p>
-          </div>
-        </div>
-        <XPBar xp={user.xp} />
-      </div>
-
-      <div className="space-y-3">
-        <h3 className="text-xl font-black text-slate-800">Lessons</h3>
-        {lessons.map((lesson) => (
-          <LessonCard
-            key={lesson.id}
-            lesson={lesson}
-            userLevel={user.level}
-            completed={user.completedLessons.includes(lesson.id)}
-            onSelect={onSelectLesson}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function QuestionCard({ question, onAnswer, answerState }) {
-  return (
-    <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 space-y-4">
-      <h3 className="text-xl font-black text-slate-800">{question.question}</h3>
-      <div className="grid gap-3">
-        {question.answers.map((answer, index) => {
-          const selected = answerState && answerState.selectedIndex === index;
-          const isCorrectChoice = answer.correct;
-          let style = 'bg-white border-2 border-slate-200 hover:border-emerald-300';
-
-          if (answerState && selected) {
-            style = answerState.correct
-              ? 'bg-emerald-100 border-emerald-500'
-              : 'bg-red-100 border-red-400';
-          } else if (answerState && isCorrectChoice) {
-            style = 'bg-emerald-50 border-emerald-300';
-          }
-
-          return (
-            <button
-              key={index}
-              className={`answer-button text-left p-3 rounded-2xl font-semibold ${style}`}
-              onClick={() => onAnswer(answer, index)}
-              disabled={Boolean(answerState)}
-            >
-              {answer.text}
-            </button>
-          );
-        })}
-      </div>
-      {answerState ? (
-        <div className="rounded-2xl p-4 bg-slate-50 border border-slate-200">
-          <p className={`font-black ${answerState.correct ? 'text-emerald-700' : 'text-red-600'}`}>
-            {answerState.correct ? 'Correct! +10 XP' : 'Not quite. +0 XP'}
-          </p>
-          <p className="text-sm text-slate-600 mt-1">{question.explanation}</p>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function LessonPlayer({ lesson, onExit, onComplete }) {
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answerState, setAnswerState] = useState(null);
-  const [results, setResults] = useState([]);
-  const [finished, setFinished] = useState(false);
-
-  const question = lesson.questions[questionIndex];
-
-  function handleAnswer(answer, selectedIndex) {
-    const correct = Boolean(answer.correct);
-    const earned = correct ? 10 : 0;
-
-    setAnswerState({ correct, selectedIndex });
-    setResults((prev) => [...prev, { questionId: question.id, correct }]);
-
-    if (correct) {
-      setScore((prev) => prev + earned);
-    }
-  }
-
-  function handleNext() {
-    if (questionIndex + 1 >= lesson.questions.length) {
-      setFinished(true);
-      return;
-    }
-
-    setQuestionIndex((prev) => prev + 1);
-    setAnswerState(null);
-  }
-
-  function handleFinish() {
-    onComplete({ lessonId: lesson.id, xpEarned: score, results });
-  }
-
-  if (finished) {
-    return (
-      <section className="max-w-2xl mx-auto bg-white rounded-3xl border-2 border-emerald-200 p-8 text-center space-y-4 duo-shadow">
-        <h2 className="text-3xl font-black text-emerald-700">Lesson Complete! 🎉</h2>
-        <p className="text-slate-600">You earned {score} XP from this session.</p>
-        <p className="text-slate-600">
-          Correct answers: {results.filter((result) => result.correct).length} / {lesson.questions.length}
-        </p>
-        <div className="flex justify-center gap-3">
-          <button className="px-5 py-3 rounded-2xl bg-slate-200 font-bold" onClick={onExit}>
-            Back to Dashboard
-          </button>
-          <button className="px-5 py-3 rounded-2xl bg-emerald-500 text-white font-bold" onClick={handleFinish}>
-            Save Progress
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="max-w-2xl mx-auto space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-black text-slate-800">{lesson.title}</h2>
-        <button className="text-sm text-slate-500 underline" onClick={onExit}>
-          Exit lesson
-        </button>
-      </div>
-
-      <ProgressBar current={questionIndex} total={lesson.questions.length} />
-      <QuestionCard question={question} onAnswer={handleAnswer} answerState={answerState} />
-
-      <button
-        className="w-full bg-indigo-500 text-white rounded-2xl py-3 font-black disabled:bg-slate-300"
-        disabled={!answerState}
-        onClick={handleNext}
-      >
-        {questionIndex + 1 >= lesson.questions.length ? 'View Results' : 'Next Question'}
-      </button>
-    </section>
-  );
-}
-
-function App() {
-  const [user, setUser] = useState(null);
-  const [lessons, setLessons] = useState([]);
-  const [activeLesson, setActiveLesson] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    async function loadLessons() {
-      try {
-        const res = await fetch('/api/lessons');
-        const data = await res.json();
-        setLessons(data);
-      } catch (loadError) {
-        setError('Could not load lessons. Please refresh.');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadLessons();
-  }, []);
-
-  async function handleLessonComplete(payload) {
-    try {
-      const res = await fetch('/api/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, ...payload })
-      });
-
-      if (!res.ok) {
-        throw new Error('Could not save progress.');
-      }
-
-      const data = await res.json();
-      setUser(data.user);
-      setActiveLesson(null);
-    } catch (completeError) {
-      setError(completeError.message);
-    }
-  }
-
-  const sortedLessons = useMemo(() => [...lessons].sort((a, b) => a.id - b.id), [lessons]);
-
-  return (
-    <main className="min-h-screen p-4 md:p-8">
-      {error ? (
-        <p className="max-w-4xl mx-auto mb-4 bg-red-100 border border-red-200 text-red-700 p-3 rounded-2xl">
-          {error}
-        </p>
-      ) : null}
-
-      {loading ? (
-        <p className="text-center font-bold text-slate-600">Loading PokerTrainer...</p>
-      ) : !user ? (
-        <Login onLogin={setUser} />
-      ) : activeLesson ? (
-        <LessonPlayer
-          lesson={activeLesson}
-          onExit={() => setActiveLesson(null)}
-          onComplete={handleLessonComplete}
-        />
-      ) : (
-        <Dashboard
-          user={user}
-          lessons={sortedLessons}
-          onSelectLesson={setActiveLesson}
-          onLogout={() => setUser(null)}
-        />
-      )}
-    </main>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);

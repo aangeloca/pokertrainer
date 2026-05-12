@@ -1,28 +1,20 @@
 {
   "name": "pokertrainer",
-  "version": "1.0.1",
-  "description": "PokerTrainer web app simples e offline",
-
   "version": "1.0.0",
-  "description": "Duolingo-style poker learning web app",
+  "description": "PokerTrainer v1.0 - app local de treino de poker com fundamentos GTO",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "node server/server.js --check"
   },
-  "keywords": ["poker", "offline", "learning"],
-  "license": "MIT"
-
   "keywords": [
     "poker",
-    "react",
-    "express",
-    "education",
-    "offline"
+    "gto",
+    "trainer",
+    "offline",
+    "education"
   ],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.21.2"
-  }
+  "license": "MIT"
 }

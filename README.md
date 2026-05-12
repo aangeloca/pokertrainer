@@ -1,106 +1,71 @@
-# PokerTrainer
+# PokerTrainer v1.0
 
-PokerTrainer é um app web de treino de poker no estilo gamificado, funcionando localmente com persistência em JSON.
-PokerTrainer is a Duolingo-inspired poker learning web app that runs fully offline.
+App local de treino de poker com fundamentos GTO, progresso persistente e drills de decisao.
 
-## Funcionalidades
+## O que esta incluido
 
-- Login/criação de usuário por username.
-- XP, nível e streak salvos em arquivo.
-- 3 lições com perguntas e feedback imediato.
-- +10 XP por resposta correta, +0 por errada.
-- Lição bloqueada por nível mínimo.
-- Progresso persistido em `server/db.json`.
+- Login/criacao de usuario local por nome.
+- Dashboard com XP, nivel, streak, precisao e dominio por conceito.
+- 4 licoes guiadas sobre GTO, ranges, posicao, pot odds, MDF, blockers e blefes.
+- Drill GTO com spots preflop, flop, turn e river.
+- Feedback por frequencia: acao principal, acao mista e acao fora da estrategia base.
+- Matriz de ranges preflop por posicao.
+- Glossario de conceitos essenciais.
+- Persistencia em `server/db.json`.
+- Sem dependencias externas: roda com Node.js puro.
 
-- Create or reuse a local username profile.
-- Track XP, level, streak, and completed lessons.
-- Play 3 lessons with instant answer feedback.
-- Earn **+10 XP** for each correct answer.
-- Unlock lessons based on your level.
-- Persist all user progress in `server/db.json`.
+## Como rodar
 
-## Stack
+```bash
+npm start
+```
 
-- Frontend: HTML + CSS + JavaScript (vanilla) + Tailwind via CDN
-- Backend: Node.js (HTTP server nativo)
-- Banco: JSON local (`server/db.json`) via filesystem
+Acesse:
+
+```text
+http://localhost:3000
+```
+
+## Build/check
+
+```bash
+npm run build
+```
+
+Esse comando valida a estrutura basica do app, os arquivos do cliente e o banco JSON.
 
 ## Estrutura
 
-- Frontend: HTML, CSS, JavaScript (ES6), React via CDN, TailwindCSS via CDN
-- Backend: Node.js + Express
-- Database: JSON file (`server/db.json`) using filesystem persistence
-
-## Project Structure
-
-```
-/pokertrainer
-  /server
+```text
+pokertrainer-main/
+  client/
+    index.html
+    styles.css
+    app.js
+  server/
     server.js
     db.json
-  /client
-    index.html
-    app.js
-    styles.css
   server.js
   package.json
-  README.md
 ```
 
-## Instalação
+## API
 
-## Install
-
-```bash
-npm install
-```
-
-## Execução
-## Run
-
-```bash
-node server.js
-```
-
-Acesse: `http://localhost:3000`
-
-## Como testar rápido
-
-1. Abra o site, crie um usuário e entre.
-2. Jogue a primeira lição e finalize.
-3. Clique em **Salvar progresso**.
-4. Volte ao dashboard e confirme XP/Nível/Streak atualizados.
-5. Reinicie o servidor e confira que os dados continuam (persistência no `db.json`).
-
-## Endpoints
-
-The app will be available at:
-
-- `http://localhost:3000`
-
-## How to Use
-
-1. Open the app in your browser.
-2. Enter a username. If the username exists, it logs you in.
-3. Pick an unlocked lesson from the dashboard.
-4. Answer each question and read immediate feedback.
-5. Save progress at the result screen to update XP, level, streak, and completed lessons.
-6. Continue unlocking higher-level lessons.
-
-## API Endpoints
-
+- `GET /api/health`
+- `GET /api/bootstrap`
 - `GET /api/users`
 - `POST /api/users`
 - `GET /api/users/:id`
-- `PUT /api/users/:id`
 - `GET /api/lessons`
-- `GET /api/lessons/:id`
-- `POST /api/progress`
+- `GET /api/scenarios`
+- `GET /api/ranges`
+- `POST /api/lesson-result`
+- `POST /api/scenario-result`
 
-## Regra de nível
+## Regra de nivel
 
-`level = Math.floor(xp / 100)`
-## Notes
+```text
+level = Math.floor(xp / 250)
+```
 
-- Level formula: `Math.floor(xp / 100)`
-- Offline-first: no external backend services are used.
+Este v1.0 e um treinador educacional. As frequencias e ranges sao simplificados para estudo e podem variar conforme rake, stack, formato, tamanho de aposta e populacao.

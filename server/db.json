@@ -1,194 +1,1280 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "angelo",
+      "xp": 0,
+      "level": 0,
+      "streak": 0,
+      "completedLessons": [],
+      "completedScenarios": [],
+      "stats": {
+        "lessonsPlayed": 0,
+        "scenariosPlayed": 0,
+        "correctAnswers": 0,
+        "totalAnswers": 0,
+        "optimalActions": 0,
+        "totalActions": 0,
+        "concepts": {
+          "preflop": 0,
+          "ranges": 0,
+          "equity": 0,
+          "potOdds": 0,
+          "blockers": 0,
+          "mdf": 0
+        }
+      }
+    }
+  ],
+  "glossary": [
+    {
+      "term": "GTO",
+      "definition": "Game Theory Optimal: estrategia balanceada que dificulta ser explorado no longo prazo."
+    },
+    {
+      "term": "Range",
+      "definition": "Conjunto de maos que um jogador pode ter em uma linha especifica."
+    },
+    {
+      "term": "MDF",
+      "definition": "Minimum Defense Frequency: frequencia minima de defesa para nao ser explorado por blefes automaticos."
+    },
+    {
+      "term": "Pot odds",
+      "definition": "Preco do call comparado ao tamanho final do pote; ajuda a decidir se a equidade basta."
+    },
+    {
+      "term": "Blocker",
+      "definition": "Carta na sua mao que reduz combinacoes fortes ou de blefe no range adversario."
+    }
+  ],
+  "ranges": {
+    "positions": [
+      "UTG",
+      "HJ",
+      "CO",
+      "BTN",
+      "SB",
+      "BB"
+    ],
+    "hands": [
+      [
+        "AA",
+        "AKs",
+        "AQs",
+        "AJs",
+        "ATs",
+        "A9s",
+        "A8s",
+        "A7s",
+        "A6s",
+        "A5s",
+        "A4s",
+        "A3s",
+        "A2s"
+      ],
+      [
+        "AKo",
+        "KK",
+        "KQs",
+        "KJs",
+        "KTs",
+        "K9s",
+        "K8s",
+        "K7s",
+        "K6s",
+        "K5s",
+        "K4s",
+        "K3s",
+        "K2s"
+      ],
+      [
+        "AQo",
+        "KQo",
+        "QQ",
+        "QJs",
+        "QTs",
+        "Q9s",
+        "Q8s",
+        "Q7s",
+        "Q6s",
+        "Q5s",
+        "Q4s",
+        "Q3s",
+        "Q2s"
+      ],
+      [
+        "AJo",
+        "KJo",
+        "QJo",
+        "JJ",
+        "JTs",
+        "J9s",
+        "J8s",
+        "J7s",
+        "J6s",
+        "J5s",
+        "J4s",
+        "J3s",
+        "J2s"
+      ],
+      [
+        "ATo",
+        "KTo",
+        "QTo",
+        "JTo",
+        "TT",
+        "T9s",
+        "T8s",
+        "T7s",
+        "T6s",
+        "T5s",
+        "T4s",
+        "T3s",
+        "T2s"
+      ],
+      [
+        "A9o",
+        "K9o",
+        "Q9o",
+        "J9o",
+        "T9o",
+        "99",
+        "98s",
+        "97s",
+        "96s",
+        "95s",
+        "94s",
+        "93s",
+        "92s"
+      ],
+      [
+        "A8o",
+        "K8o",
+        "Q8o",
+        "J8o",
+        "T8o",
+        "98o",
+        "88",
+        "87s",
+        "86s",
+        "85s",
+        "84s",
+        "83s",
+        "82s"
+      ],
+      [
+        "A7o",
+        "K7o",
+        "Q7o",
+        "J7o",
+        "T7o",
+        "97o",
+        "87o",
+        "77",
+        "76s",
+        "75s",
+        "74s",
+        "73s",
+        "72s"
+      ],
+      [
+        "A6o",
+        "K6o",
+        "Q6o",
+        "J6o",
+        "T6o",
+        "96o",
+        "86o",
+        "76o",
+        "66",
+        "65s",
+        "64s",
+        "63s",
+        "62s"
+      ],
+      [
+        "A5o",
+        "K5o",
+        "Q5o",
+        "J5o",
+        "T5o",
+        "95o",
+        "85o",
+        "75o",
+        "65o",
+        "55",
+        "54s",
+        "53s",
+        "52s"
+      ],
+      [
+        "A4o",
+        "K4o",
+        "Q4o",
+        "J4o",
+        "T4o",
+        "94o",
+        "84o",
+        "74o",
+        "64o",
+        "54o",
+        "44",
+        "43s",
+        "42s"
+      ],
+      [
+        "A3o",
+        "K3o",
+        "Q3o",
+        "J3o",
+        "T3o",
+        "93o",
+        "83o",
+        "73o",
+        "63o",
+        "53o",
+        "43o",
+        "33",
+        "32s"
+      ],
+      [
+        "A2o",
+        "K2o",
+        "Q2o",
+        "J2o",
+        "T2o",
+        "92o",
+        "82o",
+        "72o",
+        "62o",
+        "52o",
+        "42o",
+        "32o",
+        "22"
+      ]
+    ],
+    "charts": {
+      "UTG": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "88",
+          "AKs",
+          "AQs",
+          "AJs",
+          "ATs",
+          "KQs",
+          "KJs",
+          "QJs",
+          "JTs",
+          "T9s",
+          "AKo",
+          "AQo"
+        ],
+        "mix": [
+          "77",
+          "A9s",
+          "KTs",
+          "QTs",
+          "98s",
+          "AJo",
+          "KQo"
+        ]
+      },
+      "HJ": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "88",
+          "77",
+          "66",
+          "AKs",
+          "AQs",
+          "AJs",
+          "ATs",
+          "A9s",
+          "A5s",
+          "A4s",
+          "KQs",
+          "KJs",
+          "KTs",
+          "QJs",
+          "QTs",
+          "JTs",
+          "T9s",
+          "98s",
+          "AKo",
+          "AQo",
+          "AJo",
+          "KQo"
+        ],
+        "mix": [
+          "55",
+          "A8s",
+          "A7s",
+          "A6s",
+          "K9s",
+          "Q9s",
+          "J9s",
+          "87s",
+          "KJo"
+        ]
+      },
+      "CO": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "88",
+          "77",
+          "66",
+          "55",
+          "44",
+          "AKs",
+          "AQs",
+          "AJs",
+          "ATs",
+          "A9s",
+          "A8s",
+          "A7s",
+          "A6s",
+          "A5s",
+          "A4s",
+          "A3s",
+          "KQs",
+          "KJs",
+          "KTs",
+          "K9s",
+          "QJs",
+          "QTs",
+          "Q9s",
+          "JTs",
+          "J9s",
+          "T9s",
+          "T8s",
+          "98s",
+          "87s",
+          "76s",
+          "AKo",
+          "AQo",
+          "AJo",
+          "ATo",
+          "KQo",
+          "KJo",
+          "QJo"
+        ],
+        "mix": [
+          "33",
+          "22",
+          "A2s",
+          "K8s",
+          "Q8s",
+          "J8s",
+          "97s",
+          "65s",
+          "KTo",
+          "QTo",
+          "JTo"
+        ]
+      },
+      "BTN": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "88",
+          "77",
+          "66",
+          "55",
+          "44",
+          "33",
+          "22",
+          "AKs",
+          "AQs",
+          "AJs",
+          "ATs",
+          "A9s",
+          "A8s",
+          "A7s",
+          "A6s",
+          "A5s",
+          "A4s",
+          "A3s",
+          "A2s",
+          "KQs",
+          "KJs",
+          "KTs",
+          "K9s",
+          "K8s",
+          "K7s",
+          "QJs",
+          "QTs",
+          "Q9s",
+          "Q8s",
+          "JTs",
+          "J9s",
+          "J8s",
+          "T9s",
+          "T8s",
+          "98s",
+          "97s",
+          "87s",
+          "76s",
+          "65s",
+          "54s",
+          "AKo",
+          "AQo",
+          "AJo",
+          "ATo",
+          "A9o",
+          "A8o",
+          "KQo",
+          "KJo",
+          "KTo",
+          "QJo",
+          "QTo",
+          "JTo"
+        ],
+        "mix": [
+          "K6s",
+          "K5s",
+          "Q7s",
+          "J7s",
+          "T7s",
+          "86s",
+          "75s",
+          "64s",
+          "A7o",
+          "K9o",
+          "Q9o",
+          "J9o",
+          "T9o"
+        ]
+      },
+      "SB": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "88",
+          "77",
+          "66",
+          "55",
+          "44",
+          "33",
+          "22",
+          "AKs",
+          "AQs",
+          "AJs",
+          "ATs",
+          "A9s",
+          "A8s",
+          "A7s",
+          "A6s",
+          "A5s",
+          "A4s",
+          "A3s",
+          "A2s",
+          "KQs",
+          "KJs",
+          "KTs",
+          "K9s",
+          "QJs",
+          "QTs",
+          "Q9s",
+          "JTs",
+          "J9s",
+          "T9s",
+          "98s",
+          "87s",
+          "76s",
+          "65s",
+          "AKo",
+          "AQo",
+          "AJo",
+          "ATo",
+          "A9o",
+          "KQo",
+          "KJo",
+          "KTo",
+          "QJo",
+          "JTo"
+        ],
+        "mix": [
+          "K8s",
+          "K7s",
+          "Q8s",
+          "J8s",
+          "T8s",
+          "97s",
+          "86s",
+          "75s",
+          "54s",
+          "A8o",
+          "A7o",
+          "QTo"
+        ]
+      },
+      "BB": {
+        "raise": [
+          "AA",
+          "KK",
+          "QQ",
+          "JJ",
+          "TT",
+          "99",
+          "AKs",
+          "AQs",
+          "AJs",
+          "KQs",
+          "AKo",
+          "AQo"
+        ],
+        "call": [
+          "88",
+          "77",
+          "66",
+          "55",
+          "44",
+          "33",
+          "22",
+          "ATs",
+          "A9s",
+          "A8s",
+          "A7s",
+          "A6s",
+          "A5s",
+          "A4s",
+          "A3s",
+          "A2s",
+          "KJs",
+          "KTs",
+          "K9s",
+          "QJs",
+          "QTs",
+          "JTs",
+          "T9s",
+          "98s",
+          "87s",
+          "76s",
+          "65s",
+          "AJo",
+          "ATo",
+          "KQo",
+          "KJo",
+          "QJo"
+        ]
+      }
+    }
+  },
   "lessons": [
     {
       "id": 1,
-      "title": "Hand Rankings",
-      "description": "Learn how poker hands rank from strongest to weakest.",
+      "title": "Fundamentos de GTO",
+      "description": "Entenda equilibrio, exploracao, ranges e por que uma estrategia balanceada importa.",
       "levelRequired": 0,
+      "concepts": [
+        "ranges",
+        "preflop"
+      ],
+      "theory": [
+        "GTO nao significa jogar como um robo em todas as maos. Significa construir uma base que nao entrega padroes obvios.",
+        "Contra jogadores desconhecidos, comece com uma estrategia solida. Contra erros claros, ajuste de forma exploratoria.",
+        "Pense em ranges, nao em uma unica mao. Cada acao representa um conjunto de combinacoes."
+      ],
       "questions": [
         {
-          "id": 1,
-          "question": "Which hand is strongest?",
+          "id": 101,
+          "question": "Qual e a melhor definicao pratica de GTO?",
           "answers": [
-            { "text": "Straight", "correct": false },
-            { "text": "Flush", "correct": false },
-            { "text": "Full House", "correct": true },
-            { "text": "Two Pair", "correct": false }
+            {
+              "text": "Uma estrategia balanceada que limita exploracao adversaria.",
+              "correct": true
+            },
+            {
+              "text": "Uma regra fixa para sempre pagar river.",
+              "correct": false
+            },
+            {
+              "text": "Um estilo que blefa todas as maos fracas.",
+              "correct": false
+            },
+            {
+              "text": "Uma tecnica apenas para torneios ao vivo.",
+              "correct": false
+            }
           ],
-          "explanation": "A Full House beats a Straight and a Flush in standard poker rankings."
+          "explanation": "GTO busca equilibrio: valor e blefes em proporcoes que dificultam contra-ataques simples."
         },
         {
-          "id": 2,
-          "question": "What beats a Full House?",
+          "id": 102,
+          "question": "Quando o adversario comete erros muito claros, o melhor ajuste costuma ser:",
           "answers": [
-            { "text": "Three of a Kind", "correct": false },
-            { "text": "Royal Flush", "correct": true },
-            { "text": "Straight", "correct": false },
-            { "text": "Two Pair", "correct": false }
+            {
+              "text": "Ignorar tudo e manter frequencias puras.",
+              "correct": false
+            },
+            {
+              "text": "Explorar o erro, mantendo consciencia da sua base.",
+              "correct": true
+            },
+            {
+              "text": "Jogar apenas maos premium.",
+              "correct": false
+            },
+            {
+              "text": "Nunca blefar.",
+              "correct": false
+            }
           ],
-          "explanation": "Only Four of a Kind, Straight Flush, and Royal Flush beat a Full House."
+          "explanation": "A base GTO protege voce; ajustes exploratorios capturam EV quando o vilao desvia demais."
         },
         {
-          "id": 3,
-          "question": "Which hand is weaker than a Flush?",
+          "id": 103,
+          "question": "Pensar em ranges significa:",
           "answers": [
-            { "text": "Straight", "correct": true },
-            { "text": "Full House", "correct": false },
-            { "text": "Four of a Kind", "correct": false },
-            { "text": "Straight Flush", "correct": false }
+            {
+              "text": "Colocar o vilao em uma unica mao exata.",
+              "correct": false
+            },
+            {
+              "text": "Avaliar todas as combinacoes plausiveis para cada linha.",
+              "correct": true
+            },
+            {
+              "text": "Jogar sempre de forma aleatoria.",
+              "correct": false
+            },
+            {
+              "text": "Usar apenas memorias de cartas suited.",
+              "correct": false
+            }
           ],
-          "explanation": "A Straight is below a Flush in hand ranking order."
+          "explanation": "Decisoes melhores surgem quando voce compara conjuntos de maos, vantagens de range e bloqueadores."
         },
         {
-          "id": 4,
-          "question": "How many cards are in a poker hand?",
+          "id": 104,
+          "question": "Um range balanceado de river normalmente precisa ter:",
           "answers": [
-            { "text": "2", "correct": false },
-            { "text": "4", "correct": false },
-            { "text": "5", "correct": true },
-            { "text": "7", "correct": false }
+            {
+              "text": "Somente valor.",
+              "correct": false
+            },
+            {
+              "text": "Somente blefes.",
+              "correct": false
+            },
+            {
+              "text": "Valor e blefes em proporcao coerente com o tamanho da aposta.",
+              "correct": true
+            },
+            {
+              "text": "Todas as maos possiveis em frequencia igual.",
+              "correct": false
+            }
           ],
-          "explanation": "The best 5-card combination determines your poker hand."
-        },
-        {
-          "id": 5,
-          "question": "Which hand is strongest overall?",
-          "answers": [
-            { "text": "Royal Flush", "correct": true },
-            { "text": "Straight Flush", "correct": false },
-            { "text": "Four of a Kind", "correct": false },
-            { "text": "Flush", "correct": false }
-          ],
-          "explanation": "A Royal Flush is the highest possible hand in poker."
+          "explanation": "O tamanho da aposta define o preco dado ao adversario e influencia a quantidade ideal de blefes."
         }
       ]
     },
     {
       "id": 2,
-      "title": "Positions",
-      "description": "Understand table position and why acting later is powerful.",
-      "levelRequired": 1,
+      "title": "Preflop e Posicao",
+      "description": "Treine aberturas, defesa de blinds e valor de agir por ultimo.",
+      "levelRequired": 0,
+      "concepts": [
+        "preflop",
+        "ranges"
+      ],
+      "theory": [
+        "Quanto mais cedo voce age, mais tight seu range de open deve ser.",
+        "O Button realiza mais equidade porque age por ultimo no pos-flop.",
+        "No Big Blind voce recebe desconto, mas realiza equidade fora de posicao."
+      ],
       "questions": [
         {
-          "id": 1,
-          "question": "Which position acts last postflop?",
+          "id": 201,
+          "question": "Por que o Button pode abrir mais maos que UTG?",
           "answers": [
-            { "text": "Under the Gun", "correct": false },
-            { "text": "Hijack", "correct": false },
-            { "text": "Button", "correct": true },
-            { "text": "Small Blind", "correct": false }
+            {
+              "text": "Porque paga menos blinds.",
+              "correct": false
+            },
+            {
+              "text": "Porque restam menos jogadores e ele joga em posicao.",
+              "correct": true
+            },
+            {
+              "text": "Porque sempre tem a melhor mao.",
+              "correct": false
+            },
+            {
+              "text": "Porque nao pode sofrer 3-bet.",
+              "correct": false
+            }
           ],
-          "explanation": "The Button has the best position because it acts last after the flop."
+          "explanation": "O Button combina fold equity preflop com vantagem de informacao no pos-flop."
         },
         {
-          "id": 2,
-          "question": "Why is late position valuable?",
+          "id": 202,
+          "question": "Contra open do Button, o Big Blind tende a defender mais que o Small Blind porque:",
           "answers": [
-            { "text": "You post less blinds", "correct": false },
-            { "text": "You get more information before acting", "correct": true },
-            { "text": "You can see opponents' hole cards", "correct": false },
-            { "text": "You can fold for free", "correct": false }
+            {
+              "text": "Ja colocou 1 blind e tem pot odds melhores.",
+              "correct": true
+            },
+            {
+              "text": "Sempre joga em posicao.",
+              "correct": false
+            },
+            {
+              "text": "Pode ver uma carta extra.",
+              "correct": false
+            },
+            {
+              "text": "Nao precisa realizar equidade.",
+              "correct": false
+            }
           ],
-          "explanation": "Acting later gives you information from opponents' actions first."
+          "explanation": "O desconto do blind torna calls com maos marginais mais aceitaveis, embora fora de posicao."
         },
         {
-          "id": 3,
-          "question": "Which position is considered early?",
+          "id": 203,
+          "question": "Uma mao como A5s aparece em muitos ranges de 3-bet bluff porque:",
           "answers": [
-            { "text": "Button", "correct": false },
-            { "text": "Cutoff", "correct": false },
-            { "text": "Under the Gun", "correct": true },
-            { "text": "Big Blind", "correct": false }
+            {
+              "text": "Bloqueia ases fortes e tem jogabilidade com straight/flush.",
+              "correct": true
+            },
+            {
+              "text": "Sempre domina pares altos.",
+              "correct": false
+            },
+            {
+              "text": "Nao tem showdown value algum.",
+              "correct": false
+            },
+            {
+              "text": "E melhor que AA.",
+              "correct": false
+            }
           ],
-          "explanation": "Under the Gun acts first preflop and is an early position."
+          "explanation": "O blocker de A reduz combinacoes de AA/AK/AQ e a mao ainda tem boa realizacao quando paga."
         },
         {
-          "id": 4,
-          "question": "In which position should you play tighter ranges?",
+          "id": 204,
+          "question": "O principal erro de abrir loose demais em UTG e:",
           "answers": [
-            { "text": "Late position", "correct": false },
-            { "text": "Early position", "correct": true },
-            { "text": "Button only", "correct": false },
-            { "text": "Never", "correct": false }
+            {
+              "text": "Ter muitos jogadores para agir depois com ranges fortes.",
+              "correct": true
+            },
+            {
+              "text": "Ganhar blinds automaticamente.",
+              "correct": false
+            },
+            {
+              "text": "Sempre jogar em posicao.",
+              "correct": false
+            },
+            {
+              "text": "Reduzir variancia para zero.",
+              "correct": false
+            }
           ],
-          "explanation": "Early position requires stronger starting hands due to acting first."
-        },
-        {
-          "id": 5,
-          "question": "Which seat is directly right of the Button?",
-          "answers": [
-            { "text": "Big Blind", "correct": false },
-            { "text": "Small Blind", "correct": true },
-            { "text": "Cutoff", "correct": false },
-            { "text": "Under the Gun", "correct": false }
-          ],
-          "explanation": "The Small Blind sits immediately to the right of the Button."
+          "explanation": "Maos fracas em early position sofrem contra 3-bets e realizam mal contra multiplos jogadores."
         }
       ]
     },
     {
       "id": 3,
-      "title": "Preflop Decisions",
-      "description": "Practice when to fold, call, and raise before the flop.",
-      "levelRequired": 2,
+      "title": "Pot Odds, Equidade e MDF",
+      "description": "Calcule calls, defesas minimas e frequencias contra apostas.",
+      "levelRequired": 1,
+      "concepts": [
+        "equity",
+        "potOdds",
+        "mdf"
+      ],
+      "theory": [
+        "Pot odds = custo do call dividido pelo pote final depois do call.",
+        "Se uma aposta e do tamanho do pote, o defensor recebe 33% de pot odds.",
+        "MDF contra bet pot e 50%; contra meia aposta e 67%."
+      ],
       "questions": [
         {
-          "id": 1,
-          "question": "With pocket aces preflop, your default play is usually:",
+          "id": 301,
+          "question": "Vilao aposta 50 em pote de 100. Voce paga 50 para disputar 200. Pot odds aproximadas:",
           "answers": [
-            { "text": "Fold", "correct": false },
-            { "text": "Call only", "correct": false },
-            { "text": "Raise", "correct": true },
-            { "text": "Check", "correct": false }
+            {
+              "text": "25%",
+              "correct": true
+            },
+            {
+              "text": "50%",
+              "correct": false
+            },
+            {
+              "text": "75%",
+              "correct": false
+            },
+            {
+              "text": "10%",
+              "correct": false
+            }
           ],
-          "explanation": "Pocket aces are premium and typically should be raised preflop."
+          "explanation": "Voce paga 50 para um pote final de 200, entao precisa de cerca de 25% de equidade."
         },
         {
-          "id": 2,
-          "question": "From early position, weak offsuit hands are usually:",
+          "id": 302,
+          "question": "Contra uma aposta do tamanho do pote, o MDF aproximado e:",
           "answers": [
-            { "text": "Raised", "correct": false },
-            { "text": "Folded", "correct": true },
-            { "text": "Always called", "correct": false },
-            { "text": "3-bet", "correct": false }
+            {
+              "text": "25%",
+              "correct": false
+            },
+            {
+              "text": "50%",
+              "correct": true
+            },
+            {
+              "text": "75%",
+              "correct": false
+            },
+            {
+              "text": "100%",
+              "correct": false
+            }
           ],
-          "explanation": "In early position, folding weak offsuit hands is generally best."
+          "explanation": "MDF = pote / (pote + aposta). Contra pot, 1 / (1 + 1) = 50%."
         },
         {
-          "id": 3,
-          "question": "What is a 3-bet?",
+          "id": 303,
+          "question": "Se sua equidade estimada supera as pot odds, o call tende a ser:",
           "answers": [
-            { "text": "Calling the blind", "correct": false },
-            { "text": "The third community card", "correct": false },
-            { "text": "A re-raise before the flop", "correct": true },
-            { "text": "A triple check", "correct": false }
+            {
+              "text": "Lucrativo antes de considerar rake e realizacao.",
+              "correct": true
+            },
+            {
+              "text": "Sempre ruim.",
+              "correct": false
+            },
+            {
+              "text": "Obrigatorio com qualquer blocker.",
+              "correct": false
+            },
+            {
+              "text": "Igual a um fold em EV.",
+              "correct": false
+            }
           ],
-          "explanation": "A 3-bet is the first re-raise in a betting sequence."
+          "explanation": "Equidade acima do preco gera call lucrativo em termos basicos, mas realizacao e rake ainda importam."
         },
         {
-          "id": 4,
-          "question": "Which starting hand is generally strongest?",
+          "id": 304,
+          "question": "MDF serve principalmente para:",
           "answers": [
-            { "text": "7-2 offsuit", "correct": false },
-            { "text": "A-A", "correct": true },
-            { "text": "J-4 offsuit", "correct": false },
-            { "text": "9-3 suited", "correct": false }
+            {
+              "text": "Saber a frequencia minima de defesa contra blefes automaticos.",
+              "correct": true
+            },
+            {
+              "text": "Escolher cartas de baralho.",
+              "correct": false
+            },
+            {
+              "text": "Definir sempre all-in preflop.",
+              "correct": false
+            },
+            {
+              "text": "Medir apenas maos feitas.",
+              "correct": false
+            }
           ],
-          "explanation": "Pocket aces are the strongest preflop starting hand in Hold'em."
-        },
-        {
-          "id": 5,
-          "question": "In late position with a decent hand and folded action, you should often:",
-          "answers": [
-            { "text": "Fold instantly", "correct": false },
-            { "text": "Raise to open", "correct": true },
-            { "text": "Wait for showdown", "correct": false },
-            { "text": "Show your cards", "correct": false }
-          ],
-          "explanation": "Late position allows wider opens because fewer players remain to act."
+          "explanation": "MDF ajuda a proteger seu range para que o adversario nao lucre blefando qualquer duas cartas."
         }
       ]
+    },
+    {
+      "id": 4,
+      "title": "Blockers e Blefes",
+      "description": "Aprenda a selecionar blefes que removem valor do adversario e preservam suas defesas.",
+      "levelRequired": 2,
+      "concepts": [
+        "blockers",
+        "ranges"
+      ],
+      "theory": [
+        "Bons blefes bloqueiam calls fortes do adversario e desbloqueiam folds.",
+        "No river, maos sem showdown value frequentemente entram no pool de blefe.",
+        "Um blocker ruim pode bloquear as maos que voce quer que o adversario folde."
+      ],
+      "questions": [
+        {
+          "id": 401,
+          "question": "Em board com flush possivel de espadas, ter o As como blocker ajuda porque:",
+          "answers": [
+            {
+              "text": "Remove combinacoes do nut flush do adversario.",
+              "correct": true
+            },
+            {
+              "text": "Garante que voce sempre tem par.",
+              "correct": false
+            },
+            {
+              "text": "Impede o adversario de pagar qualquer aposta.",
+              "correct": false
+            },
+            {
+              "text": "Nao muda combinacoes.",
+              "correct": false
+            }
+          ],
+          "explanation": "O As reduz parte do range de valor mais forte que poderia continuar contra seu blefe."
+        },
+        {
+          "id": 402,
+          "question": "Um bom candidato a blefe no river costuma:",
+          "answers": [
+            {
+              "text": "Ter pouco showdown value e bons blockers.",
+              "correct": true
+            },
+            {
+              "text": "Ganhar no showdown com frequencia alta.",
+              "correct": false
+            },
+            {
+              "text": "Bloquear todos os folds do vilao.",
+              "correct": false
+            },
+            {
+              "text": "Ser sempre top pair.",
+              "correct": false
+            }
+          ],
+          "explanation": "Transformar maos medias em blefe pode desperdiccar valor de showdown; prefira maos que precisam fazer o vilao foldar."
+        },
+        {
+          "id": 403,
+          "question": "Se sua mao bloqueia muitos draws perdidos do vilao, isso geralmente:",
+          "answers": [
+            {
+              "text": "Diminui a quantidade de blefes naturais dele.",
+              "correct": true
+            },
+            {
+              "text": "Aumenta automaticamente seus calls.",
+              "correct": false
+            },
+            {
+              "text": "Nao influencia nada.",
+              "correct": false
+            },
+            {
+              "text": "Prova que ele tem nuts.",
+              "correct": false
+            }
+          ],
+          "explanation": "Bloquear blefes do adversario torna alguns bluff-catches piores."
+        },
+        {
+          "id": 404,
+          "question": "Em GTO, blefar river em excesso faz o adversario lucrar ao:",
+          "answers": [
+            {
+              "text": "Pagar mais bluff-catchers.",
+              "correct": true
+            },
+            {
+              "text": "Foldar todos os pares.",
+              "correct": false
+            },
+            {
+              "text": "Nunca defender.",
+              "correct": false
+            },
+            {
+              "text": "Abrir menos preflop.",
+              "correct": false
+            }
+          ],
+          "explanation": "Se ha blefes demais, o bluff-catcher ganha EV por calls mais frequentes."
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "BTN open com A5s",
+      "street": "Preflop",
+      "hero": "BTN",
+      "villain": "Blinds",
+      "hand": "A5s",
+      "board": "",
+      "pot": 1.5,
+      "facing": "Todos foldaram ate voce no Button.",
+      "question": "Qual acao captura melhor a estrategia base?",
+      "actions": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "bestAction": "raise",
+      "concepts": [
+        "preflop",
+        "ranges",
+        "blockers"
+      ],
+      "gto": {
+        "frequencies": {
+          "raise": 92,
+          "call": 0,
+          "fold": 8
+        },
+        "size": "2.2bb a 2.5bb"
+      },
+      "explanation": "A5s tem blocker de A, boa jogabilidade e e open lucrativo no Button contra blinds. Limp/call perde fold equity."
+    },
+    {
+      "id": 2,
+      "title": "BB defende contra Button",
+      "street": "Preflop",
+      "hero": "BB",
+      "villain": "BTN",
+      "hand": "K9s",
+      "board": "",
+      "pot": 4.5,
+      "facing": "Button abre 2.5bb, Small Blind folda, voce esta no Big Blind.",
+      "question": "Qual resposta se aproxima da defesa GTO?",
+      "actions": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "bestAction": "call",
+      "concepts": [
+        "preflop",
+        "potOdds",
+        "ranges"
+      ],
+      "gto": {
+        "frequencies": {
+          "call": 74,
+          "raise": 12,
+          "fold": 14
+        },
+        "size": "Call predominante; 3-bet em baixa frequencia."
+      },
+      "explanation": "K9s realiza equidade razoavel e recebe bom preco no BB. 3-bet existe, mas call e o centro da estrategia."
+    },
+    {
+      "id": 3,
+      "title": "C-bet pequena em board seco",
+      "street": "Flop",
+      "hero": "BTN",
+      "villain": "BB",
+      "hand": "AhKh",
+      "board": "Kc 7d 2s",
+      "pot": 5.5,
+      "facing": "Voce abriu Button, BB pagou. BB checka.",
+      "question": "Qual linha base e preferivel?",
+      "actions": [
+        "check",
+        "bet_small",
+        "bet_big"
+      ],
+      "bestAction": "bet_small",
+      "concepts": [
+        "ranges",
+        "equity"
+      ],
+      "gto": {
+        "frequencies": {
+          "bet_small": 78,
+          "check": 18,
+          "bet_big": 4
+        },
+        "size": "25% a 33% do pote"
+      },
+      "explanation": "Em K72 rainbow, o agressor tem vantagem de range e pode apostar pequeno com frequencia alta."
+    },
+    {
+      "id": 4,
+      "title": "MDF contra bet pot",
+      "street": "River",
+      "hero": "BB",
+      "villain": "BTN",
+      "hand": "QdJd",
+      "board": "Kc 7d 2s 4h Qs",
+      "pot": 100,
+      "facing": "Vilao aposta 100 em pote de 100 no river.",
+      "question": "Como sua defesa teorica deve ser pensada?",
+      "actions": [
+        "fold_all_bluffcatchers",
+        "defend_top_half",
+        "raise_any_pair"
+      ],
+      "bestAction": "defend_top_half",
+      "concepts": [
+        "mdf",
+        "potOdds"
+      ],
+      "gto": {
+        "frequencies": {
+          "defend_top_half": 85,
+          "fold_all_bluffcatchers": 10,
+          "raise_any_pair": 5
+        },
+        "size": "MDF perto de 50%"
+      },
+      "explanation": "Contra pot bet, voce precisa defender por volta de metade do range que chega ao river para nao permitir blefe automatico."
+    },
+    {
+      "id": 5,
+      "title": "Blocker para blefe river",
+      "street": "River",
+      "hero": "CO",
+      "villain": "BB",
+      "hand": "As5c",
+      "board": "Ks Ts 4d 8h 2s",
+      "pot": 80,
+      "facing": "Voce apostou flop, checkou turn. BB checka river quando o flush completa.",
+      "question": "Qual acao usa melhor o blocker?",
+      "actions": [
+        "check",
+        "bet_big",
+        "bet_small"
+      ],
+      "bestAction": "bet_big",
+      "concepts": [
+        "blockers",
+        "ranges"
+      ],
+      "gto": {
+        "frequencies": {
+          "bet_big": 61,
+          "check": 31,
+          "bet_small": 8
+        },
+        "size": "75% a 125% do pote em frequencia seletiva"
+      },
+      "explanation": "O As bloqueia o nut flush do vilao e A5 tem pouco showdown value, tornando a mao boa candidata a blefe grande."
+    },
+    {
+      "id": 6,
+      "title": "Top pair medio fora de posicao",
+      "street": "Turn",
+      "hero": "BB",
+      "villain": "BTN",
+      "hand": "Kc9c",
+      "board": "Kh 8d 3s 2c",
+      "pot": 18,
+      "facing": "Button apostou flop pequeno e aposta turn 75% pot.",
+      "question": "Qual resposta e mais solida?",
+      "actions": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "bestAction": "call",
+      "concepts": [
+        "mdf",
+        "ranges",
+        "equity"
+      ],
+      "gto": {
+        "frequencies": {
+          "call": 68,
+          "fold": 25,
+          "raise": 7
+        },
+        "size": "Call com parte importante dos Kx."
+      },
+      "explanation": "Top pair com kicker medio costuma defender contra segunda aposta. Raise isola contra valor melhor e folda equidade demais."
+    },
+    {
+      "id": 7,
+      "title": "3-bet por valor no Small Blind",
+      "street": "Preflop",
+      "hero": "SB",
+      "villain": "CO",
+      "hand": "QQ",
+      "board": "",
+      "pot": 4,
+      "facing": "Cutoff abre 2.5bb. Button folda. Voce esta no Small Blind.",
+      "question": "Qual acao e padrao?",
+      "actions": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "bestAction": "raise",
+      "concepts": [
+        "preflop",
+        "ranges"
+      ],
+      "gto": {
+        "frequencies": {
+          "raise": 96,
+          "call": 4,
+          "fold": 0
+        },
+        "size": "3-bet 10bb a 12bb fora de posicao"
+      },
+      "explanation": "QQ domina o range de open do CO e prefere construir pote e negar equidade, especialmente fora de posicao."
+    },
+    {
+      "id": 8,
+      "title": "Overfold contra populacao tight",
+      "street": "River",
+      "hero": "BTN",
+      "villain": "BB",
+      "hand": "JcJd",
+      "board": "Ac 9s 6s 4h 2d",
+      "pot": 70,
+      "facing": "Vilao passivo check-call flop e turn, depois lidera 90% pot no river.",
+      "question": "Qual ajuste pratico pode superar a base GTO?",
+      "actions": [
+        "call_all_pairs",
+        "fold_more",
+        "raise_bluff"
+      ],
+      "bestAction": "fold_more",
+      "concepts": [
+        "ranges",
+        "mdf"
+      ],
+      "gto": {
+        "frequencies": {
+          "fold_more": 70,
+          "call_all_pairs": 20,
+          "raise_bluff": 10
+        },
+        "size": "Exploit: fold acima do MDF contra range sub-blefado."
+      },
+      "explanation": "GTO protege contra blefes suficientes. Contra perfil passivo que blefa pouco, overfoldar bluff-catchers captura EV."
     }
   ]
 }
